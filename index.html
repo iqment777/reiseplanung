@@ -638,62 +638,42 @@
 
 
 
-  /* ── ARCHIVE ─────────────────────────────────────── */
-  .item-actions {
+  /* ── ARCHIVE & ITEM ACTIONS ──────────────────────── */
+  .item-action-row {
     display: flex;
-    flex-direction: column;
+    gap: 5px;
+    margin-top: 7px;
+    flex-wrap: wrap;
+  }
+  .item-action-btn {
+    display: inline-flex;
     align-items: center;
-    justify-content: flex-start;
-    padding-top: 1px;
-    flex-shrink: 0;
-  }
-  .archive-btn {
-    border: none;
-    background: transparent;
-    font-size: 14px;
-    cursor: pointer;
-    opacity: 0;
-    padding: 2px 4px;
+    gap: 3px;
+    padding: 3px 9px;
     border-radius: 4px;
-    transition: all 0.15s;
-    line-height: 1;
-    color: var(--text-light);
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.13s;
+    white-space: nowrap;
   }
-  .check-item:hover .archive-btn { opacity: 1; }
-  .archive-btn:hover { background: var(--bg2); color: var(--accent); transform: scale(1.15); }
+  .edit-action-btn:hover   { border-color: var(--accent3); color: var(--accent3); background: #e8f1f8; }
+  .archive-action-btn:hover { border-color: var(--gold); color: var(--gold); background: #fff8e1; }
+  .delete-action-btn:hover { border-color: var(--accent); color: var(--accent); background: #fdecea; }
   .archived-item {
     background: var(--surface2) !important;
     border-color: var(--border) !important;
-    opacity: 0.65;
+    opacity: 0.75;
   }
   .archived-item .item-text { color: var(--text-muted) !important; font-style: italic; }
-  .archived-item .archive-btn { opacity: 1 !important; color: var(--accent2); }
-  .delete-btn {
-    border: none;
-    background: transparent;
-    font-size: 13px;
-    cursor: pointer;
-    padding: 2px 4px;
-    border-radius: 4px;
-    transition: all 0.15s;
-    line-height: 1;
-    color: var(--text-light);
-    margin-top: 2px;
-  }
-  .delete-btn:hover { background: #fdecea; color: var(--accent); transform: scale(1.15); }
+  .archived-item .archive-action-btn { border-color: var(--accent2); color: var(--accent2); background: #f0f7f3; }
 
   /* ── INLINE EDIT ──────────────────────────────────────── */
-  .check-item .item-text { cursor: text; }
-  .check-item .edit-hint {
-    opacity: 0;
-    font-size: 10px;
-    color: var(--text-light);
-    margin-left: 4px;
-    transition: opacity 0.15s;
-    pointer-events: none;
-    font-style: italic;
-  }
-  .check-item:hover .edit-hint { opacity: 1; }
+  .check-item .item-text { cursor: default; }
   .check-item.editing {
     border-color: var(--accent3) !important;
     box-shadow: 0 0 0 3px rgba(41,128,185,0.12) !important;
@@ -977,7 +957,7 @@
 <script>
 // ===================== VERSION =====================
 // 🔧 Zum Updaten: Diese Zahl hochzählen, dann Datei auf GitHub hochladen
-const VERSION = '1.5.1';
+const VERSION = '1.5.2';
 const BUILD_DATE = '2026-03-29';
 
 // ===================== TRANSLATIONS =====================
@@ -1816,15 +1796,21 @@ function renderItems() {
 
     const isArchived = activeFilter === 'archive';
     el.className = 'check-item' + (isChecked ? ' checked' : '') + (isArchived ? ' archived-item' : '');
+    const archiveLbl = isArchived
+      ? (lang==='de'?'↩ Wiederherstellen':lang==='cs'?'↩ Obnovit':'↩ Restore')
+      : (lang==='de'?'🗄 Archiv':lang==='cs'?'🗄 Archivovat':'🗄 Archive');
+    const editLbl = lang==='de'?'✎ Bearbeiten':lang==='cs'?'✎ Upravit':'✎ Edit';
+    const deleteLbl = lang==='de'?'🗑 Löschen':lang==='cs'?'🗑 Smazat':'🗑 Delete';
     el.innerHTML = `
       <div class="checkbox"></div>
       <div class="item-content">
-        <div class="item-text">${itemText(item)}<span class="edit-hint">✎</span></div>
+        <div class="item-text">${itemText(item)}</div>
         ${tagsHtml ? `<div class="item-tags">${tagsHtml}</div>` : ''}
-      </div>
-      <div class="item-actions">
-        <button class="archive-btn" title="${isArchived ? (lang==='de'?'Wiederherstellen':lang==='cs'?'Obnovit':'Restore') : (lang==='de'?'Archivieren':lang==='cs'?'Archivovat':'Archive')}" onclick="toggleArchive(event, ${idx})">${isArchived ? '↩' : '🗄'}</button>
-        ${isArchived ? `<button class="delete-btn" title="${lang==='de'?'Endgültig löschen':lang==='cs'?'Trvale smazat':'Delete permanently'}" onclick="deleteItem(event, ${idx})">🗑</button>` : ''}
+        <div class="item-action-row">
+          <button class="item-action-btn edit-action-btn" onclick="startEditingByIdx(event, ${idx})">${editLbl}</button>
+          <button class="item-action-btn archive-action-btn" onclick="toggleArchive(event, ${idx})">${archiveLbl}</button>
+          ${isArchived ? `<button class="item-action-btn delete-action-btn" onclick="deleteItem(event, ${idx})">${deleteLbl}</button>` : ''}
+        </div>
       </div>
     `;
 
@@ -1847,7 +1833,7 @@ function renderItems() {
 
     // Double-click on text = enter edit mode
     const textEl = el.querySelector('.item-text');
-    textEl.ondblclick = (e) => {
+    if (textEl) textEl.ondblclick = (e) => {
       e.stopPropagation();
       startEditing(el, item, idx);
     };
@@ -2015,6 +2001,13 @@ function toggleArchive(e, idx) {
 }
 
 // ===================== INLINE EDITING =====================
+function startEditingByIdx(e, idx) {
+  e.stopPropagation();
+  const item = ITEMS_CLEAN[idx];
+  const el = e.target.closest('.check-item');
+  startEditing(el, item, idx);
+}
+
 function startEditing(el, item, idx) {
   if (el.classList.contains('editing')) return;
   el.classList.add('editing');

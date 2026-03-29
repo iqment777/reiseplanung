@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reiseplanung · Travel Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0ebe0;
+    --bg2: #e8e2d5;
+    --surface: #ffffff;
+    --surface2: #f7f3ec;
+    --border: #d6cfc2;
+    --border2: #c8bfb0;
+    --header-bg: #1c1c1a;
+    --header-text: #f0ebe0;
+    --accent: #c0392b;
+    --accent-hover: #a93226;
+    --accent2: #2d6a4f;
+    --accent3: #2980b9;
+    --gold: #b8860b;
+    --text: #1c1c1a;
+    --text-muted: #7a7060;
+    --text-light: #a09880;
+    --green: #2d6a4f;
+    --radius: 6px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  body::before, body::after { display: none; }
+
+  .app { position: relative; z-index: 1; }
+
+  /* HEADER */
+  header {
+    padding: 0 40px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--header-bg);
+    border-bottom: 2px solid var(--accent);
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .logo-icon {
+    width: 34px; height: 34px;
+    background: var(--accent);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo-text h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    line-height: 1;
+    color: var(--header-text);
+  }
+  .logo-text span {
+    font-size: 10px;
+    color: #8a8070;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  /* LANGUAGE SWITCHER */
+  .lang-switcher {
+    display: flex;
+    gap: 2px;
+    background: rgba(255,255,255,0.08);
+    padding: 3px;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .lang-btn {
+    padding: 5px 13px;
+    border-radius: 3px;
+    border: none;
+    background: transparent;
+    color: #9a9080;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.5px;
+  }
+  .lang-btn.active {
+    background: var(--accent);
+    color: #ffffff;
+    font-weight: 600;
+  }
+  .lang-btn:hover:not(.active) { color: var(--header-text); }
+
+  /* MAIN LAYOUT */
+  .main {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 60px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: var(--surface2);
+    position: sticky;
+    top: 0;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+
+  .sidebar-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 6px;
+    padding: 0 8px;
+  }
+
+  .filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.14s;
+    text-align: left;
+    width: 100%;
+  }
+  .filter-btn .icon { font-size: 15px; flex-shrink: 0; }
+  .filter-btn .label { flex: 1; font-weight: 400; }
+  .filter-btn .count {
+    background: var(--bg2);
+    color: var(--text-light);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 10px;
+    min-width: 22px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .filter-btn:hover {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border);
+    box-shadow: var(--shadow);
+  }
+  .filter-btn.active {
+    background: var(--surface);
+    border-color: var(--accent);
+    border-left: 3px solid var(--accent);
+    color: var(--text);
+    font-weight: 500;
+  }
+  .filter-btn.active .count {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 6px 2px;
+  }
+
+  /* CONTENT AREA */
+  .content {
+    padding: 28px 36px;
+    overflow-y: auto;
+    background: var(--bg);
+  }
+
+  /* SEARCH BAR */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    margin-bottom: 20px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-shadow: var(--shadow);
+  }
+  .search-bar:focus-within {
+    border-color: var(--accent3);
+    box-shadow: 0 0 0 3px rgba(41,128,185,0.1);
+  }
+  .search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+  }
+  .search-bar input::placeholder { color: var(--text-light); }
+  .search-icon { color: var(--text-light); font-size: 16px; }
+
+  /* STATS ROW */
+  .stats-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .filter-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+  }
+  .filter-label .emoji { font-size: 20px; }
+  .item-count {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    box-shadow: var(--shadow);
+  }
+  .item-count strong { color: var(--accent); }
+
+  /* CHECKLIST */
+  .checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 8px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 11px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.14s;
+    user-select: none;
+    box-shadow: var(--shadow);
+  }
+  .check-item:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+  .check-item.checked {
+    border-color: #b8d4c0;
+    background: #f0f7f3;
+    box-shadow: none;
+  }
+  .check-item.checked .item-text {
+    text-decoration: line-through;
+    color: var(--text-light);
+  }
+
+  .checkbox {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border2);
+    border-radius: 3px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.14s;
+    margin-top: 1px;
+  }
+  .check-item:hover .checkbox { border-color: var(--accent); }
+  .check-item.checked .checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .checkbox::after {
+    content: '✓';
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.12s;
+  }
+  .check-item.checked .checkbox::after { opacity: 1; }
+
+  .item-content { flex: 1; }
+  .item-text {
+    font-size: 13px;
+    line-height: 1.45;
+    transition: color 0.12s;
+    color: var(--text);
+    font-weight: 400;
+  }
+  .item-tags {
+    display: flex; flex-wrap: wrap; gap: 3px;
+    margin-top: 5px;
+  }
+  .tag {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+
+  /* Empty state */
+  .empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--text-light);
+  }
+  .empty .empty-icon { font-size: 40px; margin-bottom: 14px; }
+  .empty p { font-size: 15px; }
+
+  .filter-group-header {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 10px 3px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-top: 1px solid var(--border);
+    margin-top: 6px;
+  }
+  .filter-btn.indented {
+    padding-left: 24px;
+    font-size: 12.5px;
+  }
+  .filter-btn.indented .icon { font-size: 14px; }
+
+  /* Reset btn */
+  .reset-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    padding: 8px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.14s;
+    width: 100%;
+    justify-content: center;
+    font-weight: 500;
+  }
+  .reset-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(192,57,43,0.04);
+  }
+
+  /* Progress bar */
+  .progress-section {
+    margin-bottom: 20px;
+  }
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .progress-bar {
+    height: 5px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), #52b788);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+
+  /* SHOW CHECKED BUTTON */
+  .show-checked-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--accent2);
+    background: var(--accent2);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .show-checked-btn:hover {
+    background: #245a40;
+    border-color: #245a40;
+    box-shadow: var(--shadow-md);
+  }
+  .show-checked-btn .badge {
+    background: rgba(255,255,255,0.25);
+    border-radius: 10px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(28,28,26,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+  }
+  .modal-overlay.open {
+    display: flex;
+  }
+  .modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 680px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .modal-header {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: var(--surface2);
+  }
+  .modal-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .modal-title-row span:first-child {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .modal-badge {
+    background: var(--accent2);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 12px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .modal-print-btn {
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.14s;
+  }
+  .modal-print-btn:hover {
+    border-color: var(--accent3);
+    color: var(--accent3);
+  }
+  .modal-close-btn {
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.14s;
+  }
+  .modal-close-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .modal-body {
+    overflow-y: auto;
+    padding: 16px 24px 24px;
+  }
+  .modal-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+    font-size: 14px;
+  }
+  .modal-section {
+    margin-bottom: 20px;
+  }
+  .modal-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius);
+    border: 1px solid #b8d4c0;
+    background: #f0f7f3;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .modal-item-check {
+    color: var(--accent2);
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .modal-item-tags {
+    display: flex; flex-wrap: wrap; gap: 3px;
+    margin-top: 3px;
+  }
+
+  @media print {
+    body > * { display: none !important; }
+    #checked-modal { display: block !important; position: static !important; background: none !important; }
+    .modal-box { box-shadow: none !important; max-height: none !important; border: none !important; }
+    .modal-actions { display: none !important; }
+    .modal-body { overflow: visible !important; }
+  }
+
+  @media (max-width: 768px) {
+    header { padding: 0 16px; height: auto; padding: 12px 16px; }
+    .main { grid-template-columns: 1fr; }
+    .sidebar {
+      position: relative;
+      height: auto;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 12px;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-title, .divider { display: none; }
+    .filter-btn { width: auto; padding: 6px 10px; font-size: 12px; }
+    .content { padding: 16px; }
+    .checklist-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">
+      <div class="logo-icon">🧳</div>
+      <div class="logo-text">
+        <h1 id="app-title">Reiseplanung</h1>
+        <span id="app-subtitle">PACKLISTE & CHECKLISTE</span>
+      </div>
+    </div>
+    <div class="lang-switcher">
+      <button class="lang-btn active" onclick="setLang('de')">🇩🇪 DE</button>
+      <button class="lang-btn" onclick="setLang('cs')">🇨🇿 CS</button>
+      <button class="lang-btn" onclick="setLang('en')">🇬🇧 EN</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="content">
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="Suchen..." oninput="renderItems()">
+      </div>
+      <div class="progress-section">
+        <div class="progress-header">
+          <span id="progress-label">Erledigt</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="filter-label" id="current-filter-label">
+          <span class="emoji">🌍</span>
+          <span id="filter-name-display">Alle</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button class="show-checked-btn" id="show-checked-btn" onclick="openCheckedModal()"></button>
+          <div class="item-count"><strong id="shown-count">0</strong> <span id="items-label">Einträge</span></div>
+        </div>
+      </div>
+      <div class="checklist-grid" id="item-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKED ITEMS MODAL -->
+<div id="checked-modal" class="modal-overlay" onclick="closeCheckedModal(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title-row">
+        <span id="modal-title">Abgehakte Einträge</span>
+        <span id="modal-count-badge" class="modal-badge">0</span>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-print-btn" onclick="printChecked()" id="modal-print-btn">🖨️ Drucken</button>
+        <button class="modal-close-btn" onclick="closeCheckedModal()" id="modal-close-btn">× Schließen</button>
+      </div>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ===================== TRANSLATIONS =====================
+const T = {
+  de: {
+    appTitle: 'Reiseplanung',
+    appSubtitle: 'PACKLISTE & CHECKLISTE',
+    search: 'Suchen...',
+    done: 'Erledigt',
+    items: 'Einträge',
+    resetChecks: '↺ Alle zurücksetzen',
+    filterSection: 'FILTER',
+    empty: 'Keine Einträge gefunden',
+    showChecked: 'Abgehakte anzeigen',
+    checkedModal: 'Abgehakte Einträge',
+    checkedEmpty: 'Noch nichts abgehakt.',
+    checkedOf: 'von',
+    printList: 'Drucken',
+    closeModal: '× Schließen',
+    filters: {
+      all: 'Alle',
+      departure: 'Am Abreisetag',
+      before: 'Vor Reiseantritt',
+      clothing: 'Kleidung',
+      docs: 'Dokumente & Auto',
+      warm: 'Bei Wärme',
+      cold: 'Bei Kälte',
+      both: 'Warm & Kalt',
+      short: 'Kurze Reise',
+      food: 'Verpflegung',
+      sport: 'Sport',
+      pickleball: 'Pickleball',
+      surfing: 'Surfen',
+      inline: 'Inlineskating',
+      sup: 'Padleboard (SUP)',
+      running: 'Laufen',
+      trekking: 'Trecking',
+      swimming: 'Schwimmen',
+      water: 'Wassersport',
+      tech: 'Technik & Elektronik',
+      health: 'Gesundheit & Pflege',
+      kitchen: 'Küche',
+      camping: 'Camping & Outdoor',
+      music: 'Musik Studio',
+      sleep: 'Schlafen & Wohnen',
+    },
+    tagLabels: {
+      departure: '🚗 Abreisetag',
+      before: '📋 Vor Reise',
+      clothing: '👕 Kleidung',
+      docs: '📄 Dokumente',
+      warm: '☀️ Warm',
+      cold: '❄️ Kalt',
+      both: '🌡️ Warm+Kalt',
+      short: '⚡ Kurze Reise',
+      food: '🥗 Verpflegung',
+      sport: '🏅 Sport',
+      pickleball: '🏓 Pickleball',
+      surfing: '🏄 Surfen',
+      inline: '⛸️ Inlineskating',
+      sup: '🏄 SUP',
+      running: '🏃 Laufen',
+      trekking: '🥾 Trecking',
+      swimming: '🏊 Schwimmen',
+      water: '🌊 Wassersport',
+      tech: '💻 Technik',
+      health: '💊 Gesundheit',
+      kitchen: '🍳 Küche',
+      camping: '⛺ Camping',
+      music: '🎵 Musik',
+      sleep: '🛏️ Schlafen',
+    }
+  },
+  cs: {
+    appTitle: 'Plánování cesty',
+    appSubtitle: 'SEZNAM VĚCÍ & KONTROLNÍ SEZNAM',
+    search: 'Hledat...',
+    done: 'Hotovo',
+    items: 'položek',
+    resetChecks: '↺ Resetovat vše',
+    filterSection: 'FILTRY',
+    empty: 'Žádné položky nenalezeny',
+    showChecked: 'Zobrazit odškrtnuté',
+    checkedModal: 'Odškrtnuté položky',
+    checkedEmpty: 'Ještě nic odškrtnuto.',
+    checkedOf: 'z',
+    printList: 'Tisk',
+    closeModal: '× Zavřít',
+    filters: {
+      all: 'Vše',
+      departure: 'V den odjezdu',
+      before: 'Před odjezdem',
+      clothing: 'Oblečení',
+      docs: 'Doklady & Auto',
+      warm: 'Při teple',
+      cold: 'Při chladu',
+      both: 'Teplo & Chlad',
+      short: 'Krátká cesta',
+      food: 'Stravování',
+      sport: 'Sport',
+      pickleball: 'Pickleball',
+      surfing: 'Surfování',
+      inline: 'Inline bruslení',
+      sup: 'Paddleboard (SUP)',
+      running: 'Běh',
+      trekking: 'Trekking',
+      swimming: 'Plavání',
+      water: 'Vodní sporty',
+      tech: 'Technika & Elektronika',
+      health: 'Zdraví & Péče',
+      kitchen: 'Kuchyně',
+      camping: 'Kempování & Outdoor',
+      music: 'Hudební studio',
+      sleep: 'Spánek & Bydlení',
+    },
+    tagLabels: {
+      departure: '🚗 Den odjezdu',
+      before: '📋 Před cestou',
+      clothing: '👕 Oblečení',
+      docs: '📄 Doklady',
+      warm: '☀️ Teplo',
+      cold: '❄️ Chlad',
+      both: '🌡️ Teplo+Chlad',
+      short: '⚡ Krátká',
+      food: '🥗 Stravování',
+      sport: '🏅 Sport',
+      pickleball: '🏓 Pickleball',
+      surfing: '🏄 Surfování',
+      inline: '⛸️ Inline',
+      sup: '🏄 SUP',
+      running: '🏃 Běh',
+      trekking: '🥾 Trekking',
+      swimming: '🏊 Plavání',
+      water: '🌊 Vodní sporty',
+      tech: '💻 Technika',
+      health: '💊 Zdraví',
+      kitchen: '🍳 Kuchyně',
+      camping: '⛺ Kemping',
+      music: '🎵 Hudba',
+      sleep: '🛏️ Spánek',
+    }
+  },
+  en: {
+    appTitle: 'Trip Planner',
+    appSubtitle: 'PACKING LIST & CHECKLIST',
+    search: 'Search...',
+    done: 'Done',
+    items: 'items',
+    resetChecks: '↺ Reset all',
+    filterSection: 'FILTERS',
+    empty: 'No items found',
+    showChecked: 'Show checked items',
+    checkedModal: 'Checked Items',
+    checkedEmpty: 'Nothing checked yet.',
+    checkedOf: 'of',
+    printList: 'Print',
+    closeModal: '× Close',
+    filters: {
+      all: 'All',
+      departure: 'On Departure Day',
+      before: 'Before Trip',
+      clothing: 'Clothing',
+      docs: 'Documents & Car',
+      warm: 'Warm Weather',
+      cold: 'Cold Weather',
+      both: 'Warm & Cold',
+      short: 'Short Trip',
+      food: 'Food & Supplies',
+      sport: 'Sport',
+      pickleball: 'Pickleball',
+      surfing: 'Surfing',
+      inline: 'Inline Skating',
+      sup: 'Paddleboard (SUP)',
+      running: 'Running',
+      trekking: 'Trekking',
+      swimming: 'Swimming',
+      water: 'Water Sports',
+      tech: 'Tech & Electronics',
+      health: 'Health & Care',
+      kitchen: 'Kitchen',
+      camping: 'Camping & Outdoor',
+      music: 'Music Studio',
+      sleep: 'Sleep & Living',
+    },
+    tagLabels: {
+      departure: '🚗 Departure day',
+      before: '📋 Before trip',
+      clothing: '👕 Clothing',
+      docs: '📄 Documents',
+      warm: '☀️ Warm',
+      cold: '❄️ Cold',
+      both: '🌡️ Warm+Cold',
+      short: '⚡ Short trip',
+      food: '🥗 Food',
+      sport: '🏅 Sport',
+      pickleball: '🏓 Pickleball',
+      surfing: '🏄 Surfing',
+      inline: '⛸️ Inline',
+      sup: '🏄 SUP',
+      running: '🏃 Running',
+      trekking: '🥾 Trekking',
+      swimming: '🏊 Swimming',
+      water: '🌊 Water sports',
+      tech: '💻 Tech',
+      health: '💊 Health',
+      kitchen: '🍳 Kitchen',
+      camping: '⛺ Camping',
+      music: '🎵 Music',
+      sleep: '🛏️ Sleep',
+    }
+  }
+};
+
+// ===================== ITEMS DATA =====================
+// Tags: departure, before, clothing, docs, warm, cold, both, short, food, pickleball, water, tech, health, kitchen, camping, music, sleep
+const ITEMS = [
+  // PYJAMAS / SLEEP
+  { de: '2 Pyjama', cs: '2 pyžama', en: '2 Pyjamas', tags: ['clothing','sleep','cold'] },
+  { de: 'Kuscheldecke blau', cs: 'Modrá deka', en: 'Blue cozy blanket', tags: ['sleep','cold'] },
+  { de: 'Kuschelsachen für Abends', cs: 'Pohodlné věci na večer', en: 'Cozy evening clothes', tags: ['clothing','sleep','cold'] },
+  { de: 'Kuschelsocken 2-3x', cs: 'Teplé ponožky 2–3x', en: 'Cozy socks 2–3x', tags: ['clothing','sleep','cold'] },
+  { de: 'Schaffell', cs: 'Ovčí kůže', en: 'Sheepskin', tags: ['sleep','cold'] },
+  { de: 'Bettwäsche + Kissen (Laken)', cs: 'Povlečení + polštář (prostěradlo)', en: 'Bed linen + pillow (sheet)', tags: ['sleep'] },
+  { de: 'Bettzeugs (dunkle Laken) → wenn länger als 4 Wochen Wechselbettzeugs', cs: 'Ložní prádlo (tmavé) → při pobytu delším než 4 týdny náhradní', en: 'Bedding (dark sheets) → spare set if 4+ weeks', tags: ['sleep'] },
+  { de: 'Sitzkissen aufblasbar', cs: 'Nafukovací sedací polštář', en: 'Inflatable seat cushion', tags: ['camping','sleep'] },
+  { de: 'Kuscheldecke blau', cs: 'Modrá deka', en: 'Blue cozy blanket', tags: ['sleep','cold'] },
+  { de: 'größeres Kissen (die vom Ex-Sofa)', cs: 'Větší polštář (ze starého pohovky)', en: 'Large sofa pillow', tags: ['sleep'] },
+  { de: 'Wärmflasche für das FrostControl-Ventil', cs: 'Termofor pro FrostControl ventil', en: 'Hot water bottle for FrostControl valve', tags: ['sleep','cold','camping'] },
+
+  // CLOTHING — GENERAL
+  { de: 'Unterhosen', cs: 'Spodní prádlo', en: 'Underwear', tags: ['clothing'] },
+  { de: 'BHs (1 pro Woche) Champion Sport & bequeme', cs: 'Podprsenky (1 za týden) sportovní & pohodlné', en: 'Bras (1 per week) sport & comfy', tags: ['clothing'] },
+  { de: 'T-Shirts (Pro Woche 4) Mehr schwarze', cs: 'Trička (4 za týden) více černých', en: 'T-Shirts (4 per week) more black ones', tags: ['clothing'] },
+  { de: 'Hosen lang: Chino, Jeans (+ Gürtel)', cs: 'Dlouhé kalhoty: Chino, Džíny (+ opasek)', en: 'Long trousers: Chino, Jeans (+ belt)', tags: ['clothing','cold','both'] },
+  { de: 'Shorts', cs: 'Kraťasy', en: 'Shorts', tags: ['clothing','warm'] },
+  { de: 'T-Shirt-Kleider', cs: 'Tričkové šaty', en: 'T-shirt dresses', tags: ['clothing','warm'] },
+  { de: 'Bluse', cs: 'Halenka', en: 'Blouse', tags: ['clothing'] },
+  { de: 'Veste', cs: 'Vesta', en: 'Vest', tags: ['clothing','cold','both'] },
+  { de: 'Hoody', cs: 'Mikina s kapucí', en: 'Hoodie', tags: ['clothing','cold','both'] },
+  { de: 'Hoody leicht', cs: 'Lehká mikina s kapucí', en: 'Light hoodie', tags: ['clothing','both'] },
+  { de: 'Pulli schick (Takko)', cs: 'Hezký svetr (Takko)', en: 'Smart pullover (Takko)', tags: ['clothing','cold'] },
+  { de: 'Softshelljacke', cs: 'Softshellová bunda', en: 'Softshell jacket', tags: ['clothing','cold','both'] },
+  { de: 'Blaue Step-Winter-Jacke', cs: 'Modrá zimní bunda Step', en: 'Blue Step winter jacket', tags: ['clothing','cold'] },
+  { de: 'Mantel woox', cs: 'Kabát woox', en: 'Woox coat', tags: ['clothing','cold'] },
+  { de: 'Regenjacke (Decathlon)', cs: 'Pláštěnka (Decathlon)', en: 'Rain jacket (Decathlon)', tags: ['clothing','both'] },
+  { de: 'Poncho / Badeponcho', cs: 'Pončo / koupací pončo', en: 'Poncho / bathrobe poncho', tags: ['clothing','water','both'] },
+  { de: 'Jogginghosen 3x thermo', cs: 'Tepláky 3x termo', en: 'Jogging trousers 3x thermal', tags: ['clothing','cold'] },
+  { de: 'Laufhosen, SportShirts', cs: 'Běžecké kalhoty, sportovní trička', en: 'Running shorts, sports shirts', tags: ['clothing','warm','both','pickleball','running','sport'] },
+  { de: 'Mütze', cs: 'Čepice', en: 'Hat / beanie', tags: ['clothing','cold'] },
+  { de: 'Schildmütze', cs: 'Kšiltovka', en: 'Cap / baseball cap', tags: ['clothing','warm','pickleball'] },
+  { de: 'Stirnband Sport', cs: 'Sportovní čelenka', en: 'Sports headband', tags: ['clothing','both','pickleball','running','sport'] },
+  { de: 'Schal dünn eher Tuch', cs: 'Tenký šátek / šál', en: 'Thin scarf / bandana', tags: ['clothing','cold','both'] },
+  { de: 'Gürtel', cs: 'Pásek', en: 'Belt', tags: ['clothing'] },
+  { de: 'Stoff Leguanos', cs: 'Leguanos (látkové)', en: 'Leguanos fabric shoes', tags: ['clothing','warm'] },
+  { de: 'FlipFlop Crocks', cs: 'FlipFlop / Crocs', en: 'Flip Flop / Crocs', tags: ['clothing','warm'] },
+  { de: 'Sandalen (Frodo)', cs: 'Sandály (Frodo)', en: 'Sandals (Frodo)', tags: ['clothing','warm'] },
+  { de: 'Laufschuhe, Jogging', cs: 'Běžecké boty', en: 'Running shoes', tags: ['clothing','both','pickleball','running','sport'] },
+  { de: 'Treckingschuhe, leicht', cs: 'Lehké trekingové boty', en: 'Light trekking shoes', tags: ['clothing','both','trekking','sport'] },
+  { de: 'Socken: Sneaker', cs: 'Ponožky: kotníčkové', en: 'Socks: sneaker', tags: ['clothing','warm'] },
+  { de: 'Socken warm', cs: 'Teplé ponožky', en: 'Warm socks', tags: ['clothing','cold','both'] },
+  { de: 'Neoprensocken', cs: 'Neoprenové ponožky', en: 'Neoprene socks', tags: ['clothing','water','surfing','swimming','sport'] },
+  { de: 'Sonnenbrille', cs: 'Sluneční brýle', en: 'Sunglasses', tags: ['clothing','warm'] },
+  { de: 'Ersatzbrille', cs: 'Náhradní brýle', en: 'Spare glasses', tags: ['clothing','health'] },
+
+  // CLOTHING — WATER / SWIM
+  { de: 'Badeanzüge, Wasserhose, Wassershirt', cs: 'Plavky, neoprenové kalhoty, tričko do vody', en: 'Swimsuits, water shorts, water shirt', tags: ['clothing','warm','water','swimming','sport'] },
+  { de: 'Strandtuch', cs: 'Plážový ručník', en: 'Beach towel', tags: ['clothing','warm','water','swimming','sport'] },
+  { de: 'Wasserschuhe', cs: 'Boty do vody', en: 'Water shoes', tags: ['clothing','water','swimming','surfing','sport'] },
+
+  // PICKLEBALL
+  { de: 'Pickleball: Schläger, Bälle, Hosen (kurz, lang), Shirts, Socken, BHs, Stirnband, Cap, Schuhe, Sportjacke', cs: 'Pickleball: rakety, míčky, kalhoty (krátké, dlouhé), trička, ponožky, podprsenky, čelenka, kšiltovka, boty, sportovní bunda', en: 'Pickleball: paddles, balls, shorts (short/long), shirts, socks, sports bra, headband, cap, shoes, sport jacket', tags: ['pickleball','clothing','sport'] },
+
+  // SURFEN
+  { de: 'Surfboard / Bodyboard', cs: 'Surfboard / Bodyboard', en: 'Surfboard / Bodyboard', tags: ['surfing','sport','water','warm'] },
+  { de: 'Surfleash', cs: 'Surfleash (bezpečnostní šňůra)', en: 'Surf leash', tags: ['surfing','sport','water'] },
+  { de: 'Surfwachs (Boardwax)', cs: 'Surfový vosk', en: 'Surf wax (boardwax)', tags: ['surfing','sport'] },
+  { de: 'Neoprenanzug (Surf)', cs: 'Neoprenový oblek (surf)', en: 'Wetsuit (surf)', tags: ['surfing','sport','water','cold'] },
+  { de: 'Surfschuhe / Badeschuhe', cs: 'Surfové / koupací boty', en: 'Surf shoes / water shoes', tags: ['surfing','sport','clothing','water'] },
+
+  // INLINESKATING
+  { de: 'Inlineskates + Tasche', cs: 'Inline brusle + taška', en: 'Inline skates + bag', tags: ['inline','sport'] },
+  { de: 'Schutzausrüstung: Helm, Knie-, Ellenbogen-, Handgelenkschutz', cs: 'Ochranná výbava: helma, chrániče kolen, loktů, zápěstí', en: 'Protection gear: helmet, knee/elbow/wrist guards', tags: ['inline','sport','health'] },
+  { de: 'Inline-Socken (dünn, schwitzvermeidend)', cs: 'Inline ponožky (tenké, odvod potu)', en: 'Inline socks (thin, moisture-wicking)', tags: ['inline','sport','clothing'] },
+
+  // PADLEBOARD (SUP)
+  { de: 'Kajak & Paddel, Pumpe manuell, Sitz etc. + Kajakwagen', cs: 'Kajak & pádla, manuální pumpa, sedačka atd. + vozík', en: 'Kayak & paddles, manual pump, seat etc. + kayak trolley', tags: ['water','camping','sup','sport'] },
+  { de: 'SUP (Finne, Paddel, ePumpe, Steckdosenadapter, Wassersack) Pumpe manuell', cs: 'SUP (fin, pádlo, elektrická pumpa, adaptér, vak na vodu) manuální pumpa', en: 'SUP (fin, paddle, ePump, socket adapter, dry bag) manual pump', tags: ['water','camping','sup','sport'] },
+  { de: 'SUP-Leash (Fußschlaufe)', cs: 'SUP leash (smyčka na nohu)', en: 'SUP leash (ankle strap)', tags: ['sup','sport','water'] },
+  { de: 'SUP-Schwimmweste', cs: 'SUP záchranná vesta', en: 'SUP life vest / buoyancy aid', tags: ['sup','sport','water'] },
+  { de: 'Bodyboard', cs: 'Bodyboard', en: 'Bodyboard', tags: ['water','surfing','sport'] },
+  { de: 'Elektropumpe für Boote', cs: 'Elektrická pumpa na lodě', en: 'Electric pump for boats', tags: ['water','camping','sup'] },
+  { de: 'Taucherbrille + Flossen', cs: 'Potápěčské brýle + ploutve', en: 'Diving mask + fins', tags: ['water','swimming','sport'] },
+  { de: 'Gummi (Arbeitshandschuhe, wasserfest)', cs: 'Gumové rukavice (pracovní, voděodolné)', en: 'Rubber gloves (work, waterproof)', tags: ['water','camping'] },
+
+  // LAUFEN
+  { de: 'Laufschuhe (Jogging)', cs: 'Běžecké boty', en: 'Running shoes', tags: ['running','sport','clothing','both'] },
+  { de: 'Laufhosen & Sport-Shirts', cs: 'Běžecké kalhoty & sportovní trička', en: 'Running shorts & sports shirts', tags: ['running','sport','clothing','warm'] },
+  { de: 'Lauf-Hüftgurt / Trinksystem', cs: 'Běžecká ledvinka / hydratační systém', en: 'Running belt / hydration system', tags: ['running','sport'] },
+  { de: 'Stirnband Sport (Laufen)', cs: 'Sportovní čelenka (běh)', en: 'Sports headband (running)', tags: ['running','sport','clothing','both'] },
+
+  // TRECKING
+  { de: 'Treckingschuhe (leicht)', cs: 'Lehké trekingové boty', en: 'Light trekking shoes', tags: ['trekking','sport','clothing','both'] },
+  { de: 'Trecking-Tagesrucksack', cs: 'Trekingový denní batoh', en: 'Trekking daypack', tags: ['trekking','sport','camping'] },
+  { de: 'Wanderstöcke', cs: 'Trekingové hole', en: 'Trekking poles', tags: ['trekking','sport'] },
+  { de: 'Wanderkarte / GPS-App vorbereiten', cs: 'Turistická mapa / příprava GPS aplikace', en: 'Hiking map / GPS app prep', tags: ['trekking','sport','before'] },
+  { de: 'Regenjacke (Trecking)', cs: 'Pláštěnka (trekking)', en: 'Rain jacket (trekking)', tags: ['trekking','sport','clothing','both'] },
+
+  // SCHWIMMEN
+  { de: 'Schwimmbrille', cs: 'Plavecké brýle', en: 'Swimming goggles', tags: ['swimming','sport','water'] },
+  { de: 'Badekappe', cs: 'Koupací čepice', en: 'Swim cap', tags: ['swimming','sport'] },
+  { de: 'Mikrofaser-Handtuch (Sport)', cs: 'Mikrovláknový ručník (sport)', en: 'Microfibre towel (sport)', tags: ['swimming','sport','health'] },
+  { de: 'Ohrstöpsel für Schwimmen', cs: 'Špunty do uší pro plavání', en: 'Ear plugs for swimming', tags: ['swimming','sport','health'] },
+
+    // DOCUMENTS & CAR
+  { de: 'Pass, Perso & Führerschein', cs: 'Pas, občanský průkaz & řidičský průkaz', en: 'Passport, ID & driving licence', tags: ['docs','departure','short'] },
+  { de: 'Krankenversicherung', cs: 'Zdravotní pojištění', en: 'Health insurance card', tags: ['docs','departure'] },
+  { de: 'KFZ Versicherung 2x ausdrucken und ins Drive + Tel & Anleitung was tun bei Panne', cs: 'Pojištění vozidla 2x vytisknout a do Drive + tel & postup při poruše', en: 'Car insurance print 2x & save in Drive + breakdown guide', tags: ['docs','departure','before'] },
+  { de: 'CZ-Vignette bis zum 12.12.2026', cs: 'Česká dálniční známka do 12.12.2026', en: 'CZ highway vignette until 12.12.2026', tags: ['docs','departure','before'] },
+  { de: 'Vignetten & Ökoplatten', cs: 'Dálniční známky & ekologické plakety', en: 'Vignettes & eco stickers', tags: ['docs','departure'] },
+  { de: 'Warndreieck + Westen', cs: 'Výstražný trojúhelník + reflexní vesty', en: 'Warning triangle + safety vests', tags: ['docs','departure'] },
+  { de: 'Motor: Öl, Wischwasser, etc.', cs: 'Motor: olej, voda do ostřikovačů atd.', en: 'Car: oil, washer fluid etc.', tags: ['docs','before','departure'] },
+  { de: 'Bikes & Roller laden', cs: 'Nabít kola & koloběžky', en: 'Charge bikes & scooters', tags: ['before','departure'] },
+  { de: 'Schild für Fahrradträger', cs: 'Cedule na nosič kol', en: 'Plate for bike rack', tags: ['docs','departure'] },
+  { de: 'Bankkarte physisch, Wise', cs: 'Fyzická bankovní karta, Wise', en: 'Physical bank card, Wise', tags: ['docs','departure','short'] },
+  { de: 'Euro', cs: 'Eura', en: 'Euros (cash)', tags: ['docs','departure','short'] },
+  { de: 'Ersatzschlüssel Auto', cs: 'Náhradní klíče od auta', en: 'Spare car keys', tags: ['docs','departure'] },
+  { de: 'Bauchbeutel klein für Ersatzschlüssel', cs: 'Malá ledvinka pro náhradní klíče', en: 'Small belt bag for spare keys', tags: ['docs','departure','short'] },
+
+  // ON DEPARTURE DAY
+  { de: 'Wasser einfüllen (Tank 1/2)', cs: 'Naplnit vodu (nádrž 1/2)', en: 'Fill water tank (1/2)', tags: ['departure','before'] },
+  { de: 'Gasflaschen voll?', cs: 'Jsou plynové lahve plné?', en: 'Gas cylinders full?', tags: ['departure','before','camping'] },
+  { de: 'Kühlschrank (Sachen aus dem Kühlschrank) + Eier', cs: 'Lednice (věci z lednice) + vejce', en: 'Fridge (take fridge items) + eggs', tags: ['departure','food'] },
+  { de: 'Klo vorbereiten, Einstreu abfüllen und ins Bad', cs: 'Připravit toaletu, nasypat podestýlku a do koupelny', en: 'Prepare toilet, fill litter and take to bathroom', tags: ['departure','before'] },
+  { de: 'Wasser für die Fahrt (Lars Flaschen)', cs: 'Voda na cestu (Larsovy lahve)', en: 'Water for the drive (Lars bottles)', tags: ['departure','food','short'] },
+
+  // BEFORE TRIP
+  { de: 'Adapter zum Anschluss an Strom', cs: 'Adaptér pro připojení na elektřinu', en: 'Adapter for power connection', tags: ['before','tech','camping'] },
+  { de: 'Steckdosenadapter für Zigarettenanzünder (für Kompressor)', cs: 'Adaptér do zapalovače (pro kompresor)', en: 'Socket adapter for cigarette lighter (for compressor)', tags: ['before','tech','camping'] },
+  { de: 'Einstreu (1 pro Woche)', cs: 'Podestýlka (1 za týden)', en: 'Cat litter (1 per week)', tags: ['before','departure'] },
+  { de: 'Heizung Keramik für Strom + Fernbedienung', cs: 'Keramický ohřívač na el. + dálkové ovládání', en: 'Ceramic electric heater + remote', tags: ['before','cold','camping'] },
+  { de: 'MusicStudio: Update NI & Ableton, Lacie aktuelle Projekte auf die kleine Samsung spielen', cs: 'Hudební studio: Update NI & Ableton, přehrát projekty z Lacie na malý Samsung', en: 'Music Studio: Update NI & Ableton, copy projects from Lacie to small Samsung', tags: ['before','music','tech'] },
+
+  // TECHNOLOGY & ELECTRONICS
+  { de: 'AKASO, CR2032 Batterie für Fernbedienung, Ladekabel, alle Adapter', cs: 'AKASO, baterie CR2032 pro dálkové ovládání, nabíjecí kabel, všechny adaptéry', en: 'AKASO, CR2032 battery for remote, charging cable, all adapters', tags: ['tech'] },
+  { de: 'Asus (Ladekabel, Mouse, Adapter)', cs: 'Asus (nabíjecí kabel, myš, adaptér)', en: 'Asus laptop (charge cable, mouse, adapter)', tags: ['tech'] },
+  { de: 'Cetec Ladegerät', cs: 'Nabíječka Cetec', en: 'Cetec charger', tags: ['tech'] },
+  { de: 'Drohne', cs: 'Dron', en: 'Drone', tags: ['tech'] },
+  { de: 'Handy & Samsung S10+', cs: 'Mobil & Samsung S10+', en: 'Phone & Samsung S10+', tags: ['tech','departure'] },
+  { de: 'Kindle', cs: 'Kindle', en: 'Kindle', tags: ['tech'] },
+  { de: 'Knietisch/Knieaufsatz für Notebook', cs: 'Sklopný stolek / opěrka na kolena pro notebook', en: 'Lap desk for notebook', tags: ['tech'] },
+  { de: 'Kompressor (Akku)', cs: 'Kompresor (akumulátorový)', en: 'Air compressor (cordless)', tags: ['tech','camping'] },
+  { de: 'Kopfhöhrer Tel, Ear-Pods', cs: 'Sluchátka k mobilu, Ear-Pods', en: 'Phone headphones, Ear-Pods', tags: ['tech'] },
+  { de: 'Lautsprecher', cs: 'Reproduktor', en: 'Speaker', tags: ['tech'] },
+  { de: 'LED Campinglampe Solar (USB)', cs: 'LED kempingová lampa solární (USB)', en: 'LED solar camping lamp (USB)', tags: ['tech','camping'] },
+  { de: 'Powerbank groß, geladen!', cs: 'Velká powerbank, nabitá!', en: 'Large power bank, charged!', tags: ['tech','departure','short'] },
+  { de: 'Ring & Docking (UH)', cs: 'Ring & dokovací stanice (UH)', en: 'Ring & docking station (UH)', tags: ['tech'] },
+  { de: 'Selfie-Stick (der gute)', cs: 'Selfie tyč (ta dobrá)', en: 'Selfie stick (the good one)', tags: ['tech'] },
+  { de: 'Smartwatch + Ladekabel', cs: 'Chytré hodinky + nabíjecí kabel', en: 'Smartwatch + charging cable', tags: ['tech'] },
+  { de: 'Tablet + Ständer (als 2. Bildschirm)', cs: 'Tablet + stojan (jako 2. obrazovka)', en: 'Tablet + stand (as 2nd screen)', tags: ['tech'] },
+  { de: 'Tablet + Tastatur (falls kein Asus)', cs: 'Tablet + klávesnice (pokud bez Asus)', en: 'Tablet + keyboard (if no Asus)', tags: ['tech'] },
+  { de: 'Taschenlampe (USB)', cs: 'Baterka (USB)', en: 'Torch (USB)', tags: ['tech','camping'] },
+  { de: 'WLAN Router mini + SIM', cs: 'Mini WiFi router + SIM karta', en: 'Mini WiFi router + SIM', tags: ['tech'] },
+  { de: 'Akkuschrauber + Ladegerät', cs: 'Aku šroubovák + nabíječka', en: 'Cordless screwdriver + charger', tags: ['tech','camping'] },
+
+  // MUSIC STUDIO
+  { de: 'MUSIkStudio ASUS Mind.: externe FP + Sich-FP, Hub klein, Kopfhörer KOS inkl Kabel für Interface', cs: 'Hudební studio ASUS Min.: ext. HD + záloha, malý hub, sluchátka KOS vč. kabelu pro interface', en: 'Music Studio ASUS Min.: ext. HD + backup HD, small hub, KOS headphones w/ cable for interface', tags: ['music','tech'] },
+  { de: 'Musikstudio ASUS: externe FP + Sich-FP, Hub klein, Scarlett 2i2, Mikrophon mit Ständer & langes Kabel, Mini-Keyboard, Kopfhörer inkl Kabel für Interface', cs: 'Hudební studio ASUS: ext. HD + záloha, malý hub, Scarlett 2i2, mikrofon se stojanem & dlouhý kabel, mini klávesnice, sluchátka vč. kabelu', en: 'Music Studio ASUS: ext. HD + backup, small hub, Scarlett 2i2, mic with stand & long cable, mini keyboard, headphones w/ cable', tags: ['music','tech'] },
+
+  // HEALTH & HYGIENE
+  { de: 'Binden, Matratzenschutz, OBs', cs: 'Vložky, podložka na matraci, tampony OB', en: 'Pads, mattress protector, OB tampons', tags: ['health'] },
+  { de: 'Bodylotion CeraVe', cs: 'Tělové mléko CeraVe', en: 'CeraVe body lotion', tags: ['health'] },
+  { de: 'Duschgel', cs: 'Sprchový gel', en: 'Shower gel', tags: ['health'] },
+  { de: 'Duschhandtuch (pro Monat 1)', cs: 'Ručník do sprchy (1 za měsíc)', en: 'Shower towel (1 per month)', tags: ['health'] },
+  { de: 'Föhn', cs: 'Fén', en: 'Hair dryer', tags: ['health'] },
+  { de: 'Fusselrolle', cs: 'Lepiaci roler na vlas', en: 'Lint roller', tags: ['health'] },
+  { de: 'Handseife wohlduftend und schön', cs: 'Voňavé mýdlo na ruce', en: 'Nice fragrant hand soap', tags: ['health'] },
+  { de: 'Handtücher klein & groß (Dusche!)', cs: 'Malé & velké ručníky (sprcha!)', en: 'Small & large towels (shower!)', tags: ['health'] },
+  { de: 'Hängetasche & Tasche wo Handtuch und Duschzeugs reinpasst (dm Tasche!)', cs: 'Závěsná taška & taška pro ručník a sprchové věci (dm taška!)', en: 'Hanging bag & bag for towel and shower items (dm bag!)', tags: ['health'] },
+  { de: 'Herpes, OSCILLOCOCCINUM, Infludendron Globuli, Teebaumöl, Arnika, Schmerzmittel', cs: 'Herpes, OSCILLOCOCCINUM, Infludendron globuli, Tea tree olej, Arnika, léky na bolest', en: 'Cold sore remedy, OSCILLOCOCCINUM, Infludendron globuli, tea tree oil, Arnica, painkillers', tags: ['health'] },
+  { de: 'Hornhautraspel + Creme', cs: 'Pilník na mozoly + krém', en: 'Callus file + cream', tags: ['health'] },
+  { de: 'Kamm/Bürste', cs: 'Hřeben/kartáč', en: 'Comb/hairbrush', tags: ['health'] },
+  { de: 'Necessaire mit Basics', cs: 'Kosmetická taška se základními věcmi', en: 'Toiletry bag with basics', tags: ['health'] },
+  { de: 'Oropax', cs: 'Špunty do uší (Oropax)', en: 'Ear plugs (Oropax)', tags: ['health','sleep'] },
+  { de: 'Protein und Schüttelbecher & Mandelmilch', cs: 'Protein, šejkr & mandlové mléko', en: 'Protein powder, shaker & almond milk', tags: ['health','food'] },
+  { de: 'Rosenspray, Mandarinenspray', cs: 'Růžový sprej, mandarinkový sprej', en: 'Rose spray, mandarin spray', tags: ['health'] },
+  { de: 'Shampoo', cs: 'Šampon', en: 'Shampoo', tags: ['health'] },
+  { de: 'Silber, DMSO, Peroxyd, MMS', cs: 'Koloidní stříbro, DMSO, peroxid, MMS', en: 'Colloidal silver, DMSO, peroxide, MMS', tags: ['health'] },
+  { de: 'Streptokokinum', cs: 'Streptokokinum', en: 'Streptococcinum', tags: ['health'] },
+  { de: 'Tapes & Salben', cs: 'Tejpy & masti', en: 'Sports tape & ointments', tags: ['health','pickleball','sport'] },
+  { de: 'Vitamine', cs: 'Vitamíny', en: 'Vitamins', tags: ['health'] },
+  { de: 'Zahnbürste + Zahnpasta (elektrisch)', cs: 'Kartáček + zubní pasta (elektrický)', en: 'Toothbrush + toothpaste (electric)', tags: ['health'] },
+  { de: 'Zeckenzange', cs: 'Kleštičky na klíšťata', en: 'Tick remover', tags: ['health'] },
+  { de: 'Tee: Organic India, Brennessel', cs: 'Čaj: Organic India, kopřivový', en: 'Tea: Organic India, nettle', tags: ['health','food'] },
+  { de: 'Teebeutel und Stäbchen (Pepermint)', cs: 'Čajové sáčky a tyčinky (peprmint)', en: 'Tea bags and sticks (peppermint)', tags: ['health','food'] },
+  { de: 'Teetasse, groß', cs: 'Velký hrnek na čaj', en: 'Large tea mug', tags: ['health','kitchen'] },
+
+  // FOOD & PROVISIONS
+  { de: 'Nudeln KURZ, Dosen- und Glasessen, Reis', cs: 'Krátké těstoviny, konzervované a sklenicové jídlo, rýže', en: 'Short pasta, tinned & jarred food, rice', tags: ['food'] },
+  { de: 'Olivenöl, Essig', cs: 'Olivový olej, ocet', en: 'Olive oil, vinegar', tags: ['food','kitchen'] },
+  { de: 'Muskatnuss, Oregano, Tymian, Paprika scharf und süß, Plattpaprika, Zimt', cs: 'Muškátový oříšek, oregano, tymián, pálivá & sladká paprika, ploché papričky, skořice', en: 'Nutmeg, oregano, thyme, hot & sweet paprika, flat pepper, cinnamon', tags: ['food','kitchen'] },
+  { de: 'Salz in Tupper (viel)', cs: 'Sůl v Tupperwaru (hodně)', en: 'Salt in Tupperware (plenty)', tags: ['food','kitchen'] },
+  { de: 'Wasser (1,5 L PET-Flaschen pro Tag)', cs: 'Voda (1,5l PET lahve na den)', en: 'Water (1.5L PET bottles per day)', tags: ['food'] },
+  { de: 'Kühlakkus', cs: 'Chladicí akumulátory', en: 'Ice packs / cooling packs', tags: ['food'] },
+
+  // KITCHEN
+  { de: 'Besteck (aktuell nur von jedem 2 Stück)', cs: 'Příbory (aktuálně jen 2 kusy od každého)', en: 'Cutlery (currently only 2 of each)', tags: ['kitchen'] },
+  { de: 'Dosenöffner', cs: 'Otvírák na konzervy', en: 'Can opener', tags: ['kitchen'] },
+  { de: 'Frenchpress', cs: 'Frenchpress', en: 'French press', tags: ['kitchen'] },
+  { de: 'Gute Pfanne', cs: 'Dobrá pánev', en: 'Good frying pan', tags: ['kitchen'] },
+  { de: 'Grill + Gasflkartuschen', cs: 'Gril + plynové kartuše', en: 'Grill + gas cartridges', tags: ['kitchen','camping','warm'] },
+  { de: 'Japanisches Messer, anderes scharfes Messer', cs: 'Japonský nůž, jiný ostrý nůž', en: 'Japanese knife, other sharp knife', tags: ['kitchen'] },
+  { de: 'Kaffeetassen', cs: 'Hrníčky na kávu', en: 'Coffee mugs', tags: ['kitchen'] },
+  { de: 'Omnia', cs: 'Omnia (kempingová trouba)', en: 'Omnia (camping oven)', tags: ['kitchen','camping'] },
+  { de: 'Pfeffermühle', cs: 'Mlýnek na pepř', en: 'Pepper mill', tags: ['kitchen'] },
+  { de: 'Plastiklöffel', cs: 'Plastová lžíce', en: 'Plastic spoon', tags: ['kitchen'] },
+  { de: 'Salatbesteck', cs: 'Salátové příbory', en: 'Salad servers', tags: ['kitchen'] },
+  { de: 'Tupperschüsseln, auch zum abholen von Essen (Silikon, Glas groß, Glas klein)', cs: 'Tupperware misky vč. na odnos jídla (silikon, velké sklo, malé sklo)', en: 'Tupperware bowls incl. for takeaway food (silicone, large glass, small glass)', tags: ['kitchen'] },
+  { de: 'Viktorynox Messer 🔪, Brotmesser', cs: 'Nůž Victorinox 🔪, nůž na chleba', en: 'Victorinox knife 🔪, bread knife', tags: ['kitchen'] },
+  { de: 'Weinglas (2)', cs: 'Sklenice na víno (2)', en: 'Wine glasses (2)', tags: ['kitchen'] },
+
+  // CAMPING & OUTDOOR
+  { de: 'Allzwecktücher, feucht, Zewa, Schwämmchen', cs: 'Víceúčelové ubrousky, vlhké, Zewa, houbička', en: 'All-purpose cloths, wet wipes, Zewa, sponge', tags: ['camping'] },
+  { de: 'eBike: Akkuschlüssel, Ladegerät, Lichter, Schloß', cs: 'eBike: klíč od baterie, nabíječka, světla, zámek', en: 'eBike: battery key, charger, lights, lock', tags: ['camping'] },
+  { de: 'eRoller Inmotion (Ladekabel, Werkzeug (IMBUS!!)', cs: 'eKoloběžka Inmotion (nabíjecí kabel, nářadí (IMBUS!!)', en: 'eScooter Inmotion (charging cable, tool (IMBUS!!)', tags: ['camping'] },
+  { de: 'Fahrradschlösser + Schlüssel + Handyhalterung + Lichter', cs: 'Zámky na kola + klíče + držák mobilu + světla', en: 'Bike locks + keys + phone holder + lights', tags: ['camping'] },
+  { de: 'Fensterputzer außen mit langem Stil', cs: 'Stěrka na okna zvenku s dlouhou rukojetí', en: 'Window cleaner (outside) with long handle', tags: ['camping'] },
+  { de: 'Gaffa & blaues Klebeband', cs: 'Gaffa páska & modrá lepicí páska', en: 'Gaffer tape & blue masking tape', tags: ['camping'] },
+  { de: 'Kite Drachen', cs: 'Drak na létání', en: 'Kite', tags: ['camping','warm'] },
+  { de: 'Kiwii Tasche', cs: 'Taška Kiwii', en: 'Kiwii bag', tags: ['camping'] },
+  { de: 'Klo Kompostbeutel (pro Tag 1x Tüte)', cs: 'Kompostovací sáčky pro WC (1 sáček denně)', en: 'Compost bags for toilet (1 bag per day)', tags: ['camping'] },
+  { de: 'Kostka-Roller', cs: 'Koloběžka Kostka', en: 'Kostka scooter', tags: ['camping'] },
+  { de: 'Müllbeutel 10L für Klomülleimer', cs: 'Odpadkové sáčky 10L pro WC koš', en: 'Bin bags 10L for toilet bin', tags: ['camping'] },
+  { de: 'Müllbeutel 20L, schwarz mit Henkel (Vorrat)', cs: 'Odpadkové sáčky 20L, černé s uchy (zásoby)', en: 'Bin bags 20L, black with handles (supply)', tags: ['camping'] },
+  { de: 'Schnüre, Packschnurr, Draht', cs: 'Šňůry, vázací šňůra, drát', en: 'Ropes, cord, wire', tags: ['camping'] },
+  { de: 'Sessel 2 x, Tisch, Liege, Hocker', cs: 'Křeslo 2x, stolek, lehátko, stolička', en: 'Chairs 2x, table, sun lounger, stool', tags: ['camping'] },
+  { de: 'Sirene', cs: 'Siréna', en: 'Alarm siren', tags: ['camping'] },
+  { de: 'Spanngurte', cs: 'Popruhy / upínací pásy', en: 'Ratchet straps', tags: ['camping'] },
+  { de: 'Speedminton', cs: 'Speedminton', en: 'Speedminton', tags: ['camping','warm'] },
+  { de: 'Spiele: Mastermind, Magnetspiel, Kartenspiel', cs: 'Hry: Mastermind, magnetická hra, karetní hra', en: 'Games: Mastermind, magnetic game, card game', tags: ['camping'] },
+  { de: 'Toilettenpapier (Woche: 2 Rollen)', cs: 'Toaletní papír (týden: 2 role)', en: 'Toilet paper (per week: 2 rolls)', tags: ['camping'] },
+  { de: 'Toilettenpapier FEUCHT!', cs: 'Vlhčený toaletní papír!', en: 'Wet toilet wipes!', tags: ['camping'] },
+  { de: 'Wasserschlauch mit Adaptern', cs: 'Zahradní hadice s adaptéry', en: 'Water hose with adapters', tags: ['camping'] },
+  { de: 'Werkzeug', cs: 'Nářadí', en: 'Tools', tags: ['camping'] },
+  { de: 'Windlichter (Gläser für Kerzen)', cs: 'Svícny (sklenice na svíčky)', en: 'Candle lanterns (glasses for candles)', tags: ['camping','sleep'] },
+  { de: 'Zewa', cs: 'Zewa papírové kapesníky', en: 'Zewa tissues', tags: ['camping','health'] },
+  { de: 'Tempobox lang', cs: 'Velká krabice kapesníků', en: 'Large tissue box', tags: ['camping','health'] },
+  { de: 'Rucksack Nugget, Messenger (Minitasche)', cs: 'Batoh Nugget, messenger (mini taška)', en: 'Nugget backpack, messenger (mini bag)', tags: ['camping','short'] },
+  { de: 'LED Campinglampe Solar (USB)', cs: 'LED solární kempingová lampa (USB)', en: 'LED solar camping lamp (USB)', tags: ['camping','tech'] },
+  { de: 'Akkuschrauber + Ladegerät', cs: 'Aku šroubovák + nabíječka', en: 'Cordless screwdriver + charger', tags: ['camping','tech'] },
+];
+
+// Remove duplicate entries (some items appear twice)
+const seen = new Set();
+const ITEMS_CLEAN = ITEMS.filter(item => {
+  if (seen.has(item.de)) return false;
+  seen.add(item.de);
+  return true;
+});
+
+// ===================== FILTERS CONFIG =====================
+const FILTERS = [
+  { key: 'all', icon: '🌍' },
+  { key: 'departure', icon: '🚗' },
+  { key: 'before', icon: '📋' },
+  { key: 'short', icon: '⚡' },
+  null, // divider
+  { key: 'clothing', icon: '👕' },
+  { key: 'warm', icon: '☀️' },
+  { key: 'cold', icon: '❄️' },
+  { key: 'both', icon: '🌡️' },
+  null,
+  { key: 'docs', icon: '📄' },
+  { key: 'food', icon: '🥗' },
+  { key: 'health', icon: '💊' },
+  { key: 'kitchen', icon: '🍳' },
+  null,
+  { key: 'sport', icon: '🏅', isGroup: true },
+  { key: 'pickleball', icon: '🏓', indent: true },
+  { key: 'surfing', icon: '🏄', indent: true },
+  { key: 'inline', icon: '⛸️', indent: true },
+  { key: 'sup', icon: '🏄‍♀️', indent: true },
+  { key: 'running', icon: '🏃', indent: true },
+  { key: 'trekking', icon: '🥾', indent: true },
+  { key: 'swimming', icon: '🏊', indent: true },
+  { key: 'water', icon: '🌊', indent: true },
+  { key: 'camping', icon: '⛺' },
+  null,
+  { key: 'tech', icon: '💻' },
+  { key: 'music', icon: '🎵' },
+  { key: 'sleep', icon: '🛏️' },
+];
+
+// ===================== STATE =====================
+let lang = 'de';
+let activeFilter = 'all';
+const checked = new Set();
+
+// ===================== LANG UTILS =====================
+function t(key) { return T[lang][key] || key; }
+function tf(key) { return T[lang].filters[key] || key; }
+function tt(key) { return T[lang].tagLabels[key] || key; }
+function itemText(item) { return item[lang] || item.de; }
+
+// ===================== TAG COLORS =====================
+const tagColors = {
+  sport:      { bg: '#fef3e2', color: '#b8660a' },
+  pickleball: { bg: '#fef3e2', color: '#b8660a' },
+  surfing:    { bg: '#e8f4f8', color: '#1a6a8a' },
+  inline:     { bg: '#f0ebf8', color: '#6a3d9a' },
+  sup:        { bg: '#e6f7f4', color: '#1a7a6a' },
+  running:    { bg: '#fdecea', color: '#c0392b' },
+  trekking:   { bg: '#eef6e8', color: '#2d6a1f' },
+  swimming:   { bg: '#e8f1f8', color: '#1a5a8a' },
+  water:      { bg: '#e8f4f8', color: '#1a6a8a' },
+  departure:  { bg: '#fdecea', color: '#c0392b' },
+  before:     { bg: '#fff8e1', color: '#b8860b' },
+  clothing:   { bg: '#f0ebf8', color: '#6a3d9a' },
+  docs:       { bg: '#e8f1f8', color: '#1a5a8a' },
+  warm:       { bg: '#fff8e1', color: '#b8660a' },
+  cold:       { bg: '#e8f1f8', color: '#2980b9' },
+  both:       { bg: '#eef6e8', color: '#2d6a1f' },
+  short:      { bg: '#fdecea', color: '#c0392b' },
+  food:       { bg: '#eef6e8', color: '#2d6a1f' },
+  tech:       { bg: '#e8f1f8', color: '#2980b9' },
+  health:     { bg: '#fdecea', color: '#c0392b' },
+  kitchen:    { bg: '#fef3e2', color: '#8a5a0a' },
+  camping:    { bg: '#eef6e8', color: '#2d6a4f' },
+  music:      { bg: '#f0ebf8', color: '#6a3d9a' },
+  sleep:      { bg: '#f0ebf8', color: '#4a3d7a' },
+}
+
+// ===================== RENDER =====================
+function getFilteredItems() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  return ITEMS_CLEAN.filter(item => {
+    const sportTags = ['sport','pickleball','surfing','inline','sup','running','trekking','swimming','water'];
+    const matchFilter = activeFilter === 'all'
+      || (activeFilter === 'sport' && item.tags.some(t => sportTags.includes(t)))
+      || item.tags.includes(activeFilter);
+    const matchSearch = !q || itemText(item).toLowerCase().includes(q);
+    return matchFilter && matchSearch;
+  });
+}
+
+function countForFilter(key) {
+  if (key === 'all') return ITEMS_CLEAN.length;
+  if (key === 'sport') {
+    const sportTags = ['sport','pickleball','surfing','inline','sup','running','trekking','swimming','water'];
+    return ITEMS_CLEAN.filter(i => i.tags.some(t => sportTags.includes(t))).length;
+  }
+  return ITEMS_CLEAN.filter(i => i.tags.includes(key)).length;
+}
+
+function renderSidebar() {
+  const sb = document.getElementById('sidebar');
+  sb.innerHTML = '';
+
+  const title = document.createElement('div');
+  title.className = 'sidebar-title';
+  title.textContent = t('filterSection');
+  sb.appendChild(title);
+
+  FILTERS.forEach(f => {
+    if (!f) {
+      const d = document.createElement('div');
+      d.className = 'divider';
+      sb.appendChild(d);
+      return;
+    }
+    if (f.isGroup) {
+      const grp = document.createElement('div');
+      grp.className = 'filter-group-header';
+      grp.innerHTML = `<span>${f.icon}</span><span>${tf(f.key)}</span>`;
+      sb.appendChild(grp);
+      return;
+    }
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (activeFilter === f.key ? ' active' : '') + (f.indent ? ' indented' : '');
+    btn.innerHTML = `
+      <span class="icon">${f.icon}</span>
+      <span class="label">${tf(f.key)}</span>
+      <span class="count">${countForFilter(f.key)}</span>
+    `;
+    btn.onclick = () => { activeFilter = f.key; renderAll(); };
+    sb.appendChild(btn);
+  });
+
+  const reset = document.createElement('button');
+  reset.className = 'reset-btn';
+  reset.textContent = t('resetChecks');
+  reset.onclick = () => { checked.clear(); renderItems(); };
+  sb.appendChild(reset);
+}
+
+function renderItems() {
+  const list = document.getElementById('item-list');
+  const items = getFilteredItems();
+
+  // Update counts
+  document.getElementById('shown-count').textContent = items.length;
+  document.getElementById('items-label').textContent = t('items');
+  updateCheckedButton();
+
+  // Progress
+  const checkedCount = [...checked].filter(id => items.some((_, i) => i === id || ITEMS_CLEAN.indexOf(_) >= 0)).length;
+  const totalChecked = checked.size;
+  const total = ITEMS_CLEAN.length;
+  const pct = total ? Math.round(totalChecked / total * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+
+  if (!items.length) {
+    list.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><p>${t('empty')}</p></div>`;
+    return;
+  }
+
+  list.innerHTML = '';
+  items.forEach((item) => {
+    const idx = ITEMS_CLEAN.indexOf(item);
+    const isChecked = checked.has(idx);
+    const el = document.createElement('div');
+    el.className = 'check-item' + (isChecked ? ' checked' : '');
+
+    // Show only relevant tags (max 3) — exclude the active filter to save space
+    const shownTags = item.tags.filter(t => activeFilter === 'all' || t !== activeFilter).slice(0, 2);
+    const activeTags = activeFilter !== 'all' && item.tags.includes(activeFilter) ? [activeFilter] : [];
+    const displayTags = [...activeTags, ...shownTags.filter(t => !activeTags.includes(t))].slice(0, 3);
+
+    const tagsHtml = displayTags.map(tag => {
+      const c = tagColors[tag] || {};
+      return `<span class="tag" style="background:${c.bg||'rgba(255,255,255,0.1)'};color:${c.color||'#aaa'}">${tt(tag)}</span>`;
+    }).join('');
+
+    el.innerHTML = `
+      <div class="checkbox"></div>
+      <div class="item-content">
+        <div class="item-text">${itemText(item)}</div>
+        ${tagsHtml ? `<div class="item-tags">${tagsHtml}</div>` : ''}
+      </div>
+    `;
+    el.onclick = () => {
+      if (checked.has(idx)) checked.delete(idx);
+      else checked.add(idx);
+      renderItems();
+    };
+    list.appendChild(el);
+  });
+}
+
+function renderHeader() {
+  document.getElementById('app-title').textContent = t('appTitle');
+  document.getElementById('app-subtitle').textContent = t('appSubtitle');
+  document.getElementById('search-input').placeholder = t('search');
+  document.getElementById('progress-label').textContent = t('done');
+  document.getElementById('items-label').textContent = t('items');
+
+  // Active filter label
+  const filterConf = FILTERS.find(f => f && f.key === activeFilter);
+  document.getElementById('current-filter-label').innerHTML = `
+    <span class="emoji">${filterConf ? filterConf.icon : '🌍'}</span>
+    <span id="filter-name-display">${tf(activeFilter)}</span>
+  `;
+
+  updateCheckedButton();
+  // Lang buttons
+  document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    if (btn.textContent.includes(lang.toUpperCase())) btn.classList.add('active');
+  });
+}
+
+
+// ===================== CHECKED MODAL =====================
+function openCheckedModal() {
+  renderCheckedModal();
+  document.getElementById('checked-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCheckedModal(e) {
+  if (e && e.target !== document.getElementById('checked-modal')) return;
+  document.getElementById('checked-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function renderCheckedModal() {
+  const body = document.getElementById('modal-body');
+  const title = document.getElementById('modal-title');
+  const badge = document.getElementById('modal-count-badge');
+  const printBtn = document.getElementById('modal-print-btn');
+  const closeBtn = document.getElementById('modal-close-btn');
+
+  title.textContent = t('checkedModal');
+  printBtn.textContent = '🖨️ ' + t('printList');
+  closeBtn.textContent = t('closeModal');
+
+  const checkedItems = ITEMS_CLEAN.filter((_, i) => checked.has(i));
+  badge.textContent = checkedItems.length;
+
+  if (!checkedItems.length) {
+    body.innerHTML = `<div class="modal-empty">${t('checkedEmpty')}</div>`;
+    return;
+  }
+
+  // Group by first meaningful tag
+  const groupOrder = ['departure','before','clothing','docs','food','health','kitchen',
+    'pickleball','surfing','inline','sup','running','trekking','swimming','water',
+    'tech','music','camping','sleep'];
+  const groups = {};
+  checkedItems.forEach(item => {
+    const grp = groupOrder.find(g => item.tags.includes(g)) || 'other';
+    if (!groups[grp]) groups[grp] = [];
+    groups[grp].push(item);
+  });
+
+  body.innerHTML = '';
+  Object.entries(groups).forEach(([grp, items]) => {
+    const sec = document.createElement('div');
+    sec.className = 'modal-section';
+    const filterConf = FILTERS.find(f => f && f.key === grp);
+    const icon = filterConf ? filterConf.icon : '•';
+    sec.innerHTML = `<div class="modal-section-title">${icon} ${tf(grp)}</div>`;
+    items.forEach(item => {
+      const idx = ITEMS_CLEAN.indexOf(item);
+      const div = document.createElement('div');
+      div.className = 'modal-item';
+      const shownTags = item.tags.slice(0, 2);
+      const tagsHtml = shownTags.map(tag => {
+        const c = tagColors[tag] || {};
+        return `<span class="tag" style="background:${c.bg||'#eee'};color:${c.color||'#666'}">${tt(tag)}</span>`;
+      }).join('');
+      div.innerHTML = `
+        <span class="modal-item-check">✓</span>
+        <div>
+          <div>${itemText(item)}</div>
+          ${tagsHtml ? `<div class="modal-item-tags">${tagsHtml}</div>` : ''}
+        </div>
+      `;
+      sec.appendChild(div);
+    });
+    body.appendChild(sec);
+  });
+}
+
+function printChecked() {
+  window.print();
+}
+
+function updateCheckedButton() {
+  const btn = document.getElementById('show-checked-btn');
+  if (!btn) return;
+  const count = checked.size;
+  btn.innerHTML = `✓ ${t('showChecked')} <span class="badge">${count}</span>`;
+}
+
+function renderAll() {
+  renderHeader();
+  renderSidebar();
+  renderItems();
+}
+
+function setLang(l) {
+  lang = l;
+  renderAll();
+}
+
+// Init
+renderAll();
+</script>
+</body>
+</html>

@@ -426,6 +426,48 @@
   }
 
 
+
+  /* HEADER RIGHT GROUP */
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  /* VERSION BADGE */
+  .version-badge {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: #6a6258;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border-left: 1px solid rgba(255,255,255,0.1);
+    padding-left: 14px;
+  }
+  .version-badge strong {
+    color: #c8b89a;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .version-date {
+    color: #504840;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+  .version-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4caf7d;
+    box-shadow: 0 0 0 2px rgba(76,175,125,0.25);
+    flex-shrink: 0;
+  }
+
   /* SHOW CHECKED BUTTON */
   .show-checked-btn {
     display: flex;
@@ -593,6 +635,209 @@
     margin-top: 3px;
   }
 
+
+
+
+  /* ── ARCHIVE ─────────────────────────────────────── */
+  .item-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 1px;
+    flex-shrink: 0;
+  }
+  .archive-btn {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    line-height: 1;
+    color: var(--text-light);
+  }
+  .check-item:hover .archive-btn { opacity: 1; }
+  .archive-btn:hover { background: var(--bg2); color: var(--accent); transform: scale(1.15); }
+  .archived-item {
+    background: var(--surface2) !important;
+    border-color: var(--border) !important;
+    opacity: 0.65;
+  }
+  .archived-item .item-text { color: var(--text-muted) !important; font-style: italic; }
+  .archived-item .archive-btn { opacity: 1 !important; color: var(--accent2); }
+
+  /* ── INLINE EDIT ──────────────────────────────────────── */
+  .check-item .item-text { cursor: text; }
+  .check-item .edit-hint {
+    opacity: 0;
+    font-size: 10px;
+    color: var(--text-light);
+    margin-left: 4px;
+    transition: opacity 0.15s;
+    pointer-events: none;
+    font-style: italic;
+  }
+  .check-item:hover .edit-hint { opacity: 1; }
+  .check-item.editing {
+    border-color: var(--accent3) !important;
+    box-shadow: 0 0 0 3px rgba(41,128,185,0.12) !important;
+    transform: none !important;
+  }
+  .item-edit-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text);
+    resize: none;
+    padding: 0;
+    margin: 0;
+    min-height: 20px;
+  }
+  .edit-actions {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .edit-save-btn {
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--accent2);
+    background: var(--accent2);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.12s;
+  }
+  .edit-save-btn:hover { background: #245a40; }
+  .edit-cancel-btn {
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.12s;
+  }
+  .edit-cancel-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .item-deleted { opacity: 0.4; }
+
+  /* ADD ITEM button */
+  .add-item-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 11px 14px;
+    background: transparent;
+    border: 1px dashed var(--border2);
+    border-radius: var(--radius);
+    color: var(--text-light);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.14s;
+    width: 100%;
+    grid-column: 1 / -1;
+  }
+  .add-item-btn:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(45,106,79,0.04);
+  }
+
+  /* ── GOOGLE DRIVE TOOLBAR ─────────────────────────────────── */
+  .gdrive-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 40px;
+    background: #f7f3ec;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    flex-wrap: wrap;
+  }
+  .gdrive-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 5px;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.14s;
+    white-space: nowrap;
+  }
+  .gdrive-btn:hover { border-color: #4285f4; color: #4285f4; }
+  .gdrive-btn.connected { border-color: #34a853; color: #34a853; background: #f0f9f3; }
+  .gdrive-btn.saving { opacity: 0.7; cursor: default; }
+  .gdrive-btn .gdrive-icon { font-size: 14px; }
+  .gdrive-status {
+    font-size: 11px;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .gdrive-status .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border2);
+    flex-shrink: 0;
+  }
+  .gdrive-status .dot.green { background: #34a853; }
+  .gdrive-status .dot.yellow { background: #fbbc04; }
+  .gdrive-status .dot.red { background: #ea4335; }
+  .gdrive-autosave-label {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .gdrive-toggle {
+    position: relative;
+    display: inline-block;
+    width: 30px; height: 16px;
+  }
+  .gdrive-toggle input { opacity: 0; width: 0; height: 0; }
+  .gdrive-toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: var(--border2);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .gdrive-toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 12px; width: 12px;
+    left: 2px; top: 2px;
+    background: white;
+    border-radius: 50%;
+    transition: 0.2s;
+  }
+  .gdrive-toggle input:checked + .gdrive-toggle-slider { background: #34a853; }
+  .gdrive-toggle input:checked + .gdrive-toggle-slider::before { transform: translateX(14px); }
+
   @media print {
     body > * { display: none !important; }
     #checked-modal { display: block !important; position: static !important; background: none !important; }
@@ -631,12 +876,42 @@
         <span id="app-subtitle">PACKLISTE & CHECKLISTE</span>
       </div>
     </div>
-    <div class="lang-switcher">
-      <button class="lang-btn active" onclick="setLang('de')">🇩🇪 DE</button>
-      <button class="lang-btn" onclick="setLang('cs')">🇨🇿 CS</button>
-      <button class="lang-btn" onclick="setLang('en')">🇬🇧 EN</button>
+    <div class="header-right">
+      <div class="version-badge" title="Build: 2026-03-29">
+        <span class="version-dot"></span>
+        <span>VERSION <strong id="version-display">1.0.0</strong></span>
+        <span class="version-date" id="version-date-display">2026-03-29</span>
+      </div>
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('de')">🇩🇪 DE</button>
+        <button class="lang-btn" onclick="setLang('cs')">🇨🇿 CS</button>
+        <button class="lang-btn" onclick="setLang('en')">🇬🇧 EN</button>
+      </div>
     </div>
   </header>
+
+  <div class="gdrive-bar" id="gdrive-bar">
+    <button class="gdrive-btn" id="gdrive-login-btn" onclick="gdriveLogin()">
+      <span class="gdrive-icon">🔗</span> <span id="gdrive-btn-label">Google Drive verbinden</span>
+    </button>
+    <button class="gdrive-btn" id="gdrive-save-btn" onclick="gdriveSave()" style="display:none">
+      <span class="gdrive-icon">💾</span> <span id="gdrive-save-label">Speichern</span>
+    </button>
+    <button class="gdrive-btn" id="gdrive-load-btn" onclick="gdriveLoad()" style="display:none">
+      <span class="gdrive-icon">📂</span> <span id="gdrive-load-label">Laden</span>
+    </button>
+    <div class="gdrive-status">
+      <span class="dot" id="gdrive-dot"></span>
+      <span id="gdrive-status-text">Nicht verbunden</span>
+    </div>
+    <div class="gdrive-autosave-label" id="gdrive-autosave-wrap" style="display:none">
+      <span id="gdrive-autosave-label">Auto-Speichern</span>
+      <label class="gdrive-toggle">
+        <input type="checkbox" id="gdrive-autosave-toggle" onchange="toggleAutosave(this.checked)" checked>
+        <span class="gdrive-toggle-slider"></span>
+      </label>
+    </div>
+  </div>
 
   <div class="main">
     <aside class="sidebar" id="sidebar"></aside>
@@ -687,6 +962,11 @@
 </div>
 
 <script>
+// ===================== VERSION =====================
+// 🔧 Zum Updaten: Diese Zahl hochzählen, dann Datei auf GitHub hochladen
+const VERSION = '1.5.0';
+const BUILD_DATE = '2026-03-29';
+
 // ===================== TRANSLATIONS =====================
 const T = {
   de: {
@@ -730,9 +1010,18 @@ const T = {
       camping: 'Camping & Outdoor',
       music: 'Musik Studio',
       sleep: 'Schlafen & Wohnen',
+      womo: 'Wohnmobil',
+      womo_check: 'Fahrzeug-Check',
+      womo_supply: 'Ver- & Entsorgung',
+      womo_power: 'Strom & Energie',
+      womo_outside: 'Außen & Stellplatz',
+      womo_docs: 'WoMo-Dokumente',
+      womo_comfort: 'Komfort & Wohnen',
+      archive: 'Archiv',
     },
     tagLabels: {
       departure: '🚗 Abreisetag',
+      womo: '🚐 Wohnmobil',
       before: '📋 Vor Reise',
       clothing: '👕 Kleidung',
       docs: '📄 Dokumente',
@@ -756,6 +1045,13 @@ const T = {
       camping: '⛺ Camping',
       music: '🎵 Musik',
       sleep: '🛏️ Schlafen',
+      womo: '🚐 WoMo',
+      womo_check: '🔧 Fahrzeug',
+      womo_supply: '💧 Versorgung',
+      womo_power: '⚡ Strom',
+      womo_outside: '🏕️ Außen',
+      womo_docs: '📄 WoMo-Docs',
+      womo_comfort: '🛋️ Komfort',
     }
   },
   cs: {
@@ -799,9 +1095,18 @@ const T = {
       camping: 'Kempování & Outdoor',
       music: 'Hudební studio',
       sleep: 'Spánek & Bydlení',
+      womo: 'Karavan / Obytné auto',
+      womo_check: 'Kontrola vozidla',
+      womo_supply: 'Zásobování & Odpad',
+      womo_power: 'Proud & Energie',
+      womo_outside: 'Venku & Stanoviště',
+      womo_docs: 'Doklady WoMo',
+      womo_comfort: 'Komfort & Bydlení',
+      archive: 'Archiv',
     },
     tagLabels: {
       departure: '🚗 Den odjezdu',
+      womo: '🚐 Karavan',
       before: '📋 Před cestou',
       clothing: '👕 Oblečení',
       docs: '📄 Doklady',
@@ -825,6 +1130,13 @@ const T = {
       camping: '⛺ Kemping',
       music: '🎵 Hudba',
       sleep: '🛏️ Spánek',
+      womo: '🚐 Karavan',
+      womo_check: '🔧 Vozidlo',
+      womo_supply: '💧 Zásobování',
+      womo_power: '⚡ Proud',
+      womo_outside: '🏕️ Venku',
+      womo_docs: '📄 Doklady',
+      womo_comfort: '🛋️ Komfort',
     }
   },
   en: {
@@ -868,9 +1180,18 @@ const T = {
       camping: 'Camping & Outdoor',
       music: 'Music Studio',
       sleep: 'Sleep & Living',
+      womo: 'Motorhome / Camper',
+      womo_check: 'Vehicle Check',
+      womo_supply: 'Supply & Waste',
+      womo_power: 'Power & Energy',
+      womo_outside: 'Outside & Pitch',
+      womo_docs: 'Motorhome Docs',
+      womo_comfort: 'Comfort & Living',
+      archive: 'Archive',
     },
     tagLabels: {
       departure: '🚗 Departure day',
+      womo: '🚐 Motorhome',
       before: '📋 Before trip',
       clothing: '👕 Clothing',
       docs: '📄 Documents',
@@ -894,6 +1215,13 @@ const T = {
       camping: '⛺ Camping',
       music: '🎵 Music',
       sleep: '🛏️ Sleep',
+      womo: '🚐 Motorhome',
+      womo_check: '🔧 Vehicle',
+      womo_supply: '💧 Supply',
+      womo_power: '⚡ Power',
+      womo_outside: '🏕️ Outside',
+      womo_docs: '📄 WoMo docs',
+      womo_comfort: '🛋️ Comfort',
     }
   }
 };
@@ -1134,6 +1462,114 @@ const ITEMS = [
   { de: 'Rucksack Nugget, Messenger (Minitasche)', cs: 'Batoh Nugget, messenger (mini taška)', en: 'Nugget backpack, messenger (mini bag)', tags: ['camping','short'] },
   { de: 'LED Campinglampe Solar (USB)', cs: 'LED solární kempingová lampa (USB)', en: 'LED solar camping lamp (USB)', tags: ['camping','tech'] },
   { de: 'Akkuschrauber + Ladegerät', cs: 'Aku šroubovák + nabíječka', en: 'Cordless screwdriver + charger', tags: ['camping','tech'] },
+  // ═══════════════════════════════════════════════
+  // WOHNMOBIL
+  // ═══════════════════════════════════════════════
+
+  // FAHRZEUG-CHECK (vor Abfahrt)
+  { de: 'Reifendruck prüfen (inkl. Reserverad)', cs: 'Zkontrolovat tlak v pneumatikách (vč. rezervy)', en: 'Check tyre pressure (incl. spare)', tags: ['womo','womo_check','before','departure'] },
+  { de: 'Motoröl, Kühlwasser, Wischwasser kontrollieren', cs: 'Zkontrolovat motorový olej, chladicí kapalinu, ostřikovače', en: 'Check engine oil, coolant, washer fluid', tags: ['womo','womo_check','before','departure'] },
+  { de: 'Bremsen & Beleuchtung prüfen', cs: 'Zkontrolovat brzdy a osvětlení', en: 'Check brakes & lights', tags: ['womo','womo_check','before'] },
+  { de: 'Dachluken & Fenster geschlossen?', cs: 'Jsou střešní okna a okna zavřená?', en: 'Roof hatches & windows closed?', tags: ['womo','womo_check','departure'] },
+  { de: 'Trittstufe eingeklappt?', cs: 'Je schůdek zasunutý?', en: 'Step retracted?', tags: ['womo','womo_check','departure'] },
+  { de: 'Markise eingerollt & gesichert?', cs: 'Je markýza srolovaná a zajištěná?', en: 'Awning rolled up & secured?', tags: ['womo','womo_check','departure'] },
+  { de: 'Außenspiegel ausgeklappt & eingestellt', cs: 'Vnější zrcátka rozložená a nastavená', en: 'Wing mirrors extended & adjusted', tags: ['womo','womo_check','departure'] },
+  { de: 'Fahrradträger gesichert & Schild montiert', cs: 'Nosič kol zajištěn & cedule namontována', en: 'Bike rack secured & plate mounted', tags: ['womo','womo_check','departure'] },
+  { de: 'Gasflasche beim Fahren geschlossen!', cs: 'Plynová láhev při jízdě uzavřená!', en: 'Gas cylinder closed while driving!', tags: ['womo','womo_check','departure'] },
+  { de: 'Stützfüße / Nivellierung eingefahren', cs: 'Podpěrné nohy / vyrovnání zasunuty', en: 'Stabiliser legs / levelling retracted', tags: ['womo','womo_check','departure'] },
+  { de: 'Sat-Antenne / TV-Antenne eingefahren', cs: 'Satelitní / TV anténa zasunuta', en: 'Satellite / TV antenna retracted', tags: ['womo','womo_check','departure'] },
+  { de: 'Kompressor / Akku-Pumpe für Reifen', cs: 'Kompresor / akumulátorová pumpa na pneumatiky', en: 'Compressor / battery pump for tyres', tags: ['womo','womo_check','camping'] },
+
+  // VER- & ENTSORGUNG
+  { de: 'Frischwassertank gefüllt (mind. ½)', cs: 'Nádrž čerstvé vody naplněna (min. ½)', en: 'Fresh water tank filled (at least ½)', tags: ['womo','womo_supply','before','departure'] },
+  { de: 'Grauwassertank geleert', cs: 'Nádrž šedé vody vyprázdněna', en: 'Grey water tank emptied', tags: ['womo','womo_supply','before','departure'] },
+  { de: 'Schwarzwassertank / Kassette geleert & gespült', cs: 'Nádrž černé vody / kazeta vyprázdněna a vypláchnuta', en: 'Black water tank / cassette emptied & flushed', tags: ['womo','womo_supply','before','departure'] },
+  { de: 'Wasserschlauch + Adapter (für Campingplatz)', cs: 'Hadice na vodu + adaptér (pro kemp)', en: 'Water hose + adapter (for campsite)', tags: ['womo','womo_supply','camping'] },
+  { de: 'Klo-Kassette: Sanitärflüssigkeit nachfüllen', cs: 'WC kazeta: doplnit sanitární kapalinu', en: 'Toilet cassette: refill sanitary fluid', tags: ['womo','womo_supply'] },
+  { de: 'Klo-Kompostbeutel (1 pro Tag)', cs: 'Kompostovací sáčky na WC (1 za den)', en: 'Compost toilet bags (1 per day)', tags: ['womo','womo_supply'] },
+  { de: 'Einstreu für Komposttoilette (Vorrat)', cs: 'Podestýlka pro kompostovací toaletu (zásoby)', en: 'Composting toilet litter (supply)', tags: ['womo','womo_supply'] },
+  { de: 'Müllbeutel verschiedene Größen', cs: 'Odpadkové sáčky různých velikostí', en: 'Bin bags various sizes', tags: ['womo','womo_supply'] },
+  { de: 'Entsorgungsstation finden (Park4Night, CamperContact)', cs: 'Najít odpadní stanici (Park4Night, CamperContact)', en: 'Find dump station (Park4Night, CamperContact)', tags: ['womo','womo_supply'] },
+  { de: 'Wärmflasche / FrostControl-Ventil sichern (Winter)', cs: 'Termofor / FrostControl ventil zajistit (zima)', en: 'Hot water bottle / FrostControl valve (winter)', tags: ['womo','womo_supply','cold'] },
+
+  // STROM & ENERGIE
+  { de: 'Gasflaschen voll? (Kochen, Heizen)', cs: 'Jsou plynové lahve plné? (vaření, topení)', en: 'Gas cylinders full? (cooking, heating)', tags: ['womo','womo_power','before','departure'] },
+  { de: 'Landstromkabel (230V, min. 25m)', cs: 'Kabel pro připojení k síti (230V, min. 25m)', en: 'Mains hook-up cable (230V, min. 25m)', tags: ['womo','womo_power','camping'] },
+  { de: 'CEE-Adapter Set (Campingstecker)', cs: 'Sada CEE adaptérů (kempingová zástrčka)', en: 'CEE adapter set (camping plug)', tags: ['womo','womo_power','camping'] },
+  { de: 'Adapter Zigarettenanzünder → Steckdose', cs: 'Adaptér zapalovač → zásuvka', en: 'Cigarette lighter → socket adapter', tags: ['womo','womo_power','tech'] },
+  { de: 'Solarpanel funktionsfähig & sauber', cs: 'Solární panel funkční a čistý', en: 'Solar panel working & clean', tags: ['womo','womo_power','before'] },
+  { de: 'Aufbaubatterie geladen prüfen', cs: 'Zkontrolovat nabití palubní baterie', en: 'Check leisure battery charge', tags: ['womo','womo_power','before','departure'] },
+  { de: 'Wechselrichter (230V aus Batterie)', cs: 'Měnič napětí (230V z baterie)', en: 'Inverter (230V from battery)', tags: ['womo','womo_power','tech'] },
+  { de: 'Heizung (Diesel/Gas): Vorrat & Test', cs: 'Topení (diesel/plyn): zásoby a test', en: 'Heater (diesel/gas): supply & test', tags: ['womo','womo_power','cold'] },
+  { de: 'Elektrische Keramikheizung als Backup', cs: 'Elektrický keramický ohřívač jako záloha', en: 'Electric ceramic heater as backup', tags: ['womo','womo_power','cold'] },
+  { de: 'LED Campinglampen & Solarlampen', cs: 'LED kempingové lampy & solární lampy', en: 'LED camping lights & solar lamps', tags: ['womo','womo_power','camping'] },
+
+  // AUSSEN & STELLPLATZ
+  { de: 'Nivellierkeile / Unterlegkeile', cs: 'Nivelační klíny / podkladní klíny', en: 'Levelling wedges / chocks', tags: ['womo','womo_outside'] },
+  { de: 'Markise + Markisenheringe & Spanngurte', cs: 'Markýza + hřeby a upínací pásy', en: 'Awning + pegs & tensioning straps', tags: ['womo','womo_outside','camping'] },
+  { de: 'Campingstühle 2x + Tisch + Hocker', cs: 'Kempingové židle 2x + stolek + stolička', en: 'Camping chairs 2x + table + stool', tags: ['womo','womo_outside','camping'] },
+  { de: 'Vorzeltteppich / Outdoor-Matte', cs: 'Předsíňový koberec / venkovní rohož', en: 'Awning mat / outdoor rug', tags: ['womo','womo_outside','camping'] },
+  { de: 'Grill + Gaskartusche', cs: 'Gril + plynová kartuše', en: 'Grill + gas cartridge', tags: ['womo','womo_outside','kitchen','warm'] },
+  { de: 'Feuerlöscher geprüft (Pflicht!)', cs: 'Hasicí přístroj zkontrolován (povinné!)', en: 'Fire extinguisher checked (mandatory!)', tags: ['womo','womo_outside','womo_docs'] },
+  { de: 'Warndreieck + Warnwesten (mind. 2)', cs: 'Výstražný trojúhelník + reflexní vesty (min. 2)', en: 'Warning triangle + safety vests (min. 2)', tags: ['womo','womo_outside','docs'] },
+  { de: 'Unterlegkeil / Radkeil (Pflicht in manchen Ländern)', cs: 'Klín pod kolo (povinné v některých zemích)', en: 'Wheel chock (mandatory in some countries)', tags: ['womo','womo_outside','womo_docs'] },
+  { de: 'Schmutzwasser-Eimer & Handschuhe', cs: 'Kbelík na odpadní vodu & rukavice', en: 'Waste water bucket & gloves', tags: ['womo','womo_outside','womo_supply'] },
+  { de: 'Outdoor-Dusche / Solardusche', cs: 'Venkovní sprcha / solární sprcha', en: 'Outdoor shower / solar shower', tags: ['womo','womo_outside','warm'] },
+  { de: 'Spanngurte & Zurrgurte für Transport', cs: 'Upínací & stahovací pásy pro transport', en: 'Ratchet straps & lashing straps', tags: ['womo','womo_outside','camping'] },
+
+  // WOMO-DOKUMENTE
+  { de: 'Fahrzeugschein (Zulassung) im WoMo', cs: 'Technický průkaz vozidla v karavanu', en: 'Vehicle registration document in motorhome', tags: ['womo','womo_docs','docs','departure'] },
+  { de: 'KFZ-Versicherung (Green Card)', cs: 'Pojištění vozidla (zelená karta)', en: 'Vehicle insurance (green card)', tags: ['womo','womo_docs','docs','departure'] },
+  { de: 'Hauptuntersuchung (TÜV) gültig?', cs: 'Platná technická kontrola (STK)?', en: 'MOT / vehicle inspection valid?', tags: ['womo','womo_docs','before'] },
+  { de: 'ADAC / Pannenhilfe Mitgliedschaft', cs: 'ADAC / členství v asistenční službě', en: 'ADAC / breakdown assistance membership', tags: ['womo','womo_docs'] },
+  { de: 'Stellplatz-Apps installiert (Park4Night, Camperize)', cs: 'Aplikace pro stanoviště nainstalované (Park4Night, Camperize)', en: 'Pitch apps installed (Park4Night, Camperize)', tags: ['womo','womo_docs','tech','before'] },
+  { de: 'Vignetten & Mautpässe (Länder prüfen!)', cs: 'Dálniční známky & mýtné průkazy (zkontrolovat země!)', en: 'Toll stickers & passes (check countries!)', tags: ['womo','womo_docs','docs','departure'] },
+  { de: 'Campingausweis / ACSI-Karte', cs: 'Kempingový průkaz / ACSI karta', en: 'Camping carnet / ACSI card', tags: ['womo','womo_docs'] },
+  { de: 'Notfallnummern: ADAC, Versicherung, Pannenhilfe', cs: 'Nouzová čísla: ADAC, pojišťovna, asistenční služba', en: 'Emergency numbers: ADAC, insurance, breakdown', tags: ['womo','womo_docs'] },
+
+  // KOMFORT & WOHNEN
+  { de: 'Bettwäsche / Schlafsack', cs: 'Povlečení / spací pytel', en: 'Bed linen / sleeping bag', tags: ['womo','womo_comfort','sleep'] },
+  { de: 'Kuscheldecken & Kissen', cs: 'Deky & polštáře', en: 'Blankets & pillows', tags: ['womo','womo_comfort','sleep','cold'] },
+  { de: 'Verdunklungsvorhänge / Thermomatten für Windschutzscheibe', cs: 'Zatemňovací závěsy / tepelné rohože na přední okno', en: 'Blackout curtains / thermal mats for windscreen', tags: ['womo','womo_comfort','sleep'] },
+  { de: 'Insektenschutz: Fliegengitter, Mückenspray', cs: 'Ochrana proti hmyzu: síťky, repelent', en: 'Insect protection: fly screen, mosquito spray', tags: ['womo','womo_comfort','warm'] },
+  { de: 'Türmatte / Schmutzfangmatte innen', cs: 'Rohožka / nečistotová podložka uvnitř', en: 'Door mat / dirt-trap mat inside', tags: ['womo','womo_comfort'] },
+  { de: 'Kleiderhaken / Aufhängesystem innen', cs: 'Háčky na oblečení / systém zavěšení uvnitř', en: 'Clothes hooks / hanging system inside', tags: ['womo','womo_comfort'] },
+  { de: 'Frischhalteboxen & Vakuumbeutel', cs: 'Svěží boxy & vakuové sáčky', en: 'Storage boxes & vacuum bags', tags: ['womo','womo_comfort','kitchen'] },
+  { de: 'Netz-Organizer / Aufbewahrungstaschen', cs: 'Síťový organizér / úložné kapsy', en: 'Net organiser / storage pouches', tags: ['womo','womo_comfort'] },
+  { de: 'Regenschirm & Regenponcho (Schnellzugriff)', cs: 'Deštník & pláštěnka (rychlý přístup)', en: 'Umbrella & rain poncho (quick access)', tags: ['womo','womo_comfort','both'] },
+  { de: 'Werkzeugkasten (Grundausstattung WoMo)', cs: 'Sada nářadí (základní vybavení karavanu)', en: 'Tool kit (basic motorhome equipment)', tags: ['womo','womo_comfort','womo_check'] },
+  { de: 'Ersatzglühbirnen & Sicherungen fürs WoMo', cs: 'Náhradní žárovky & pojistky pro karavan', en: 'Spare bulbs & fuses for motorhome', tags: ['womo','womo_comfort','womo_check'] },
+  { de: 'Dichtungsband / Silikon (kleine Reparaturen)', cs: 'Těsnicí páska / silikon (malé opravy)', en: 'Sealing tape / silicone (minor repairs)', tags: ['womo','womo_comfort','womo_check'] },
+
+  // WOMO EXTRAS — Zu zweit / Freistehen / Stellplatz-Apps
+  { de: 'Park4Night App (offline Karten laden!)', cs: 'Aplikace Park4Night (stáhnout offline mapy!)', en: 'Park4Night app (download offline maps!)', tags: ['womo','womo_docs','womo_outside','tech','before'] },
+  { de: 'Camperize / Stellplatz.de App installiert', cs: 'Camperize / Stellplatz.de app nainstalována', en: 'Camperize / Stellplatz.de app installed', tags: ['womo','womo_docs','tech','before'] },
+  { de: 'iOverlander / FreeCampsites für Wildcamping', cs: 'iOverlander / FreeCampsites pro volné kempování', en: 'iOverlander / FreeCampsites for wild camping', tags: ['womo','womo_docs','tech','before'] },
+  { de: 'Bargeld für Stellplatzgebühren (Münzen!)', cs: 'Hotovost na poplatky za stanoviště (mince!)', en: 'Cash for pitch fees (coins!)', tags: ['womo','womo_outside','docs'] },
+  { de: 'Sichtschutz / Insektengitter für alle Fenster', cs: 'Clona / sítě proti hmyzu pro všechna okna', en: 'Privacy screen / insect net for all windows', tags: ['womo','womo_comfort','warm'] },
+  { de: 'Wildcamping-Regeln Zielland prüfen (vor Abfahrt)', cs: 'Zkontrolovat pravidla volného kempování v cílové zemi', en: 'Check wild camping rules in destination country', tags: ['womo','womo_docs','before'] },
+
+  // ZU ZWEIT
+  { de: 'Handtücher 2x (jede Person 1 Satz)', cs: 'Ručníky 2x (každá osoba 1 sada)', en: 'Towels 2x (1 set per person)', tags: ['womo','womo_comfort','health'] },
+  { de: 'Kaffeetassen 2x, Weingläser 2x, Besteck 2x', cs: 'Hrníčky 2x, sklenice na víno 2x, příbory 2x', en: 'Coffee mugs 2x, wine glasses 2x, cutlery 2x', tags: ['womo','womo_comfort','kitchen'] },
+  { de: 'Camping-Stühle 2x (mind. einer mit Armlehne)', cs: 'Kempingové židle 2x (alespoň jedna s područkami)', en: 'Camping chairs 2x (at least one with armrests)', tags: ['womo','womo_outside','camping'] },
+  { de: 'Schlüssel 2x (jede Person eigener WoMo-Schlüssel)', cs: 'Klíče 2x (každý vlastní klíč od karavanu)', en: 'Keys 2x (each person own motorhome key)', tags: ['womo','womo_docs','departure'] },
+  { de: 'Kopfhörer für beide (Nacht / Störungsfreiheit)', cs: 'Sluchátka pro oba (noc / bez rušení)', en: 'Headphones for both (night / no disturbance)', tags: ['womo','womo_comfort','sleep','tech'] },
+
+  // SICHERHEIT FREISTEHEN
+  { de: 'Türsicherung / Sicherheitskette innen', cs: 'Dveřní zabezpečení / bezpečnostní řetěz zevnitř', en: 'Door lock / security chain inside', tags: ['womo','womo_check','womo_outside'] },
+  { de: 'CO-Melder (Pflicht bei Gasheizung!)', cs: 'Detektor CO (povinné při plynovém topení!)', en: 'CO detector (mandatory with gas heating!)', tags: ['womo','womo_check','womo_power'] },
+  { de: 'Rauchmelder geprüft & Batterie frisch', cs: 'Detektor kouře zkontrolován & čerstvá baterie', en: 'Smoke detector checked & fresh battery', tags: ['womo','womo_check','before'] },
+  { de: 'Gaswarner (erkennt Gasaustritt im WoMo)', cs: 'Hlídač plynu (detekuje únik plynu v karavanu)', en: 'Gas detector (detects gas leaks in motorhome)', tags: ['womo','womo_check','womo_power'] },
+  { de: 'Sirene / Alarmanlage aktiv?', cs: 'Siréna / alarm aktivní?', en: 'Siren / alarm system active?', tags: ['womo','womo_check','departure'] },
+  { de: 'Lenkradkralle / Diebstahlsicherung', cs: 'Volantový zámek / ochrana proti krádeži', en: 'Steering wheel lock / anti-theft device', tags: ['womo','womo_check'] },
+
+  // FREISTEHEN SPEZIFISCH
+  { de: 'Frischwasser-Reserve (Kanister 10-20L extra)', cs: 'Záloha čerstvé vody (kanystr 10-20L navíc)', en: 'Fresh water reserve (10-20L jerry can extra)', tags: ['womo','womo_supply','camping'] },
+  { de: 'Lebensmittel-Vorrat für 3-5 Tage (autark)', cs: 'Zásoby jídla na 3-5 dní (samostatně)', en: 'Food supply for 3-5 days (self-sufficient)', tags: ['womo','womo_comfort','food'] },
+  { de: 'Offline-Karten geladen (Maps.me / OsmAnd)', cs: 'Offline mapy staženy (Maps.me / OsmAnd)', en: 'Offline maps downloaded (Maps.me / OsmAnd)', tags: ['womo','womo_docs','tech','before'] },
+  { de: 'Mülltrennung & Entsorgungsstellen-App', cs: 'Třídění odpadu & aplikace pro sběrné dvory', en: 'Waste sorting & recycling point app', tags: ['womo','womo_supply'] },
+
 ];
 
 // Remove duplicate entries (some items appear twice)
@@ -1175,18 +1611,42 @@ const FILTERS = [
   { key: 'tech', icon: '💻' },
   { key: 'music', icon: '🎵' },
   { key: 'sleep', icon: '🛏️' },
+  null,
+  { key: 'womo', icon: '🚐', isGroup: true },
+  { key: 'womo_check', icon: '🔧', indent: true },
+  { key: 'womo_supply', icon: '💧', indent: true },
+  { key: 'womo_power', icon: '⚡', indent: true },
+  { key: 'womo_outside', icon: '🏕️', indent: true },
+  { key: 'womo_docs', icon: '📄', indent: true },
+  { key: 'womo_comfort', icon: '🛋️', indent: true },
+  null,
+  { key: 'archive', icon: '🗄️' },
 ];
 
 // ===================== STATE =====================
 let lang = 'de';
 let activeFilter = 'all';
 const checked = new Set();
+// Custom edits: Map of idx -> { de, cs, en } overrides (only current lang stored simply as 'custom')
+const customTexts = new Map();   // idx -> string (edited text, stored per-lang key)
+const customLangTexts = new Map(); // idx -> { de, cs, en }
+// Custom added items
+const customItems = [];  // { de, cs, en, tags: [] }
+// Archive: set of ITEMS_CLEAN indices
+const archived = new Set();
 
 // ===================== LANG UTILS =====================
 function t(key) { return T[lang][key] || key; }
 function tf(key) { return T[lang].filters[key] || key; }
 function tt(key) { return T[lang].tagLabels[key] || key; }
-function itemText(item) { return item[lang] || item.de; }
+function itemText(item) {
+  const idx = ITEMS_CLEAN.indexOf(item);
+  if (idx >= 0 && customLangTexts.has(idx)) {
+    return customLangTexts.get(idx)[lang] || customLangTexts.get(idx).de || item[lang] || item.de;
+  }
+  // custom items reference themselves
+  return item[lang] || item.de;
+}
 
 // ===================== TAG COLORS =====================
 const tagColors = {
@@ -1214,15 +1674,30 @@ const tagColors = {
   camping:    { bg: '#eef6e8', color: '#2d6a4f' },
   music:      { bg: '#f0ebf8', color: '#6a3d9a' },
   sleep:      { bg: '#f0ebf8', color: '#4a3d7a' },
+  womo:         { bg: '#fff3e0', color: '#e65100' },
+  womo_check:   { bg: '#fce4ec', color: '#b71c1c' },
+  womo_supply:  { bg: '#e3f2fd', color: '#1565c0' },
+  womo_power:   { bg: '#fff8e1', color: '#f57f17' },
+  womo_outside: { bg: '#e8f5e9', color: '#2e7d32' },
+  womo_docs:    { bg: '#e8f1f8', color: '#1a5a8a' },
+  womo_comfort: { bg: '#f3e5f5', color: '#6a1b9a' },
 }
 
 // ===================== RENDER =====================
 function getFilteredItems() {
   const q = document.getElementById('search-input').value.toLowerCase();
   return ITEMS_CLEAN.filter(item => {
+    const idx = ITEMS_CLEAN.indexOf(item);
+    const isArchived = archived.has(idx);
+    // Archive filter: show only archived
+    if (activeFilter === 'archive') return isArchived && (!q || itemText(item).toLowerCase().includes(q));
+    // All other filters: hide archived items
+    if (isArchived) return false;
     const sportTags = ['sport','pickleball','surfing','inline','sup','running','trekking','swimming','water'];
+    const womoTags = ['womo','womo_check','womo_supply','womo_power','womo_outside','womo_docs','womo_comfort'];
     const matchFilter = activeFilter === 'all'
       || (activeFilter === 'sport' && item.tags.some(t => sportTags.includes(t)))
+      || (activeFilter === 'womo' && item.tags.some(t => womoTags.includes(t)))
       || item.tags.includes(activeFilter);
     const matchSearch = !q || itemText(item).toLowerCase().includes(q);
     return matchFilter && matchSearch;
@@ -1230,12 +1705,20 @@ function getFilteredItems() {
 }
 
 function countForFilter(key) {
-  if (key === 'all') return ITEMS_CLEAN.length;
+  if (key === 'all') return ITEMS_CLEAN.filter((_, i) => !archived.has(i)).length;
   if (key === 'sport') {
     const sportTags = ['sport','pickleball','surfing','inline','sup','running','trekking','swimming','water'];
     return ITEMS_CLEAN.filter(i => i.tags.some(t => sportTags.includes(t))).length;
   }
-  return ITEMS_CLEAN.filter(i => i.tags.includes(key)).length;
+  if (key === 'womo') {
+    const womoTags = ['womo','womo_check','womo_supply','womo_power','womo_outside','womo_docs','womo_comfort'];
+    return ITEMS_CLEAN.filter(i => i.tags.some(t => womoTags.includes(t))).length;
+  }
+  if (key === 'archive') return archived.size;
+  return ITEMS_CLEAN.filter(i => {
+    const idx = ITEMS_CLEAN.indexOf(i);
+    return !archived.has(idx) && i.tags.includes(key);
+  }).length;
 }
 
 function renderSidebar() {
@@ -1318,20 +1801,52 @@ function renderItems() {
       return `<span class="tag" style="background:${c.bg||'rgba(255,255,255,0.1)'};color:${c.color||'#aaa'}">${tt(tag)}</span>`;
     }).join('');
 
+    const isArchived = activeFilter === 'archive';
+    el.className = 'check-item' + (isChecked ? ' checked' : '') + (isArchived ? ' archived-item' : '');
     el.innerHTML = `
       <div class="checkbox"></div>
       <div class="item-content">
-        <div class="item-text">${itemText(item)}</div>
+        <div class="item-text">${itemText(item)}<span class="edit-hint">✎</span></div>
         ${tagsHtml ? `<div class="item-tags">${tagsHtml}</div>` : ''}
       </div>
+      <div class="item-actions">
+        <button class="archive-btn" title="${isArchived ? (lang==='de'?'Wiederherstellen':lang==='cs'?'Obnovit':'Restore') : (lang==='de'?'Archivieren':lang==='cs'?'Archivovat':'Archive')}" onclick="toggleArchive(event, ${idx})">${isArchived ? '↩' : '🗄'}</button>
+      </div>
     `;
-    el.onclick = () => {
+
+    // Single click = toggle check (on checkbox or item, but not on text)
+    const checkbox = el.querySelector('.checkbox');
+    checkbox.onclick = (e) => {
+      e.stopPropagation();
       if (checked.has(idx)) checked.delete(idx);
       else checked.add(idx);
       renderItems();
+      triggerAutosave();
     };
+    el.onclick = (e) => {
+      if (e.target.closest('.item-text') || e.target.closest('.edit-hint')) return;
+      if (checked.has(idx)) checked.delete(idx);
+      else checked.add(idx);
+      renderItems();
+      triggerAutosave();
+    };
+
+    // Double-click on text = enter edit mode
+    const textEl = el.querySelector('.item-text');
+    textEl.ondblclick = (e) => {
+      e.stopPropagation();
+      startEditing(el, item, idx);
+    };
+
     list.appendChild(el);
   });
+
+  // "+" Add item button at end
+  const addBtn = document.createElement('button');
+  addBtn.className = 'add-item-btn';
+  addBtn.innerHTML = '＋ ' + (lang === 'de' ? 'Neuen Eintrag hinzufügen' : lang === 'cs' ? 'Přidat novou položku' : 'Add new item');
+  addBtn.onclick = () => startAddingItem();
+  list.appendChild(addBtn);
 }
 
 function renderHeader() {
@@ -1348,7 +1863,12 @@ function renderHeader() {
     <span id="filter-name-display">${tf(activeFilter)}</span>
   `;
 
+  // Version display
+  document.getElementById('version-display').textContent = VERSION;
+  document.getElementById('version-date-display').textContent = BUILD_DATE;
+  document.querySelector('.version-badge').title = 'Build: ' + BUILD_DATE;
   updateCheckedButton();
+  updateGdriveLabels();
   // Lang buttons
   document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
   document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -1438,6 +1958,343 @@ function updateCheckedButton() {
   if (!btn) return;
   const count = checked.size;
   btn.innerHTML = `✓ ${t('showChecked')} <span class="badge">${count}</span>`;
+}
+
+
+
+// ===================== ARCHIVE =====================
+function toggleArchive(e, idx) {
+  e.stopPropagation();
+  if (archived.has(idx)) {
+    archived.delete(idx);
+  } else {
+    archived.add(idx);
+    checked.delete(idx); // uncheck when archiving
+  }
+  renderItems();
+  triggerAutosave();
+}
+
+// ===================== INLINE EDITING =====================
+function startEditing(el, item, idx) {
+  if (el.classList.contains('editing')) return;
+  el.classList.add('editing');
+  const contentEl = el.querySelector('.item-content');
+  const currentText = itemText(item);
+
+  contentEl.innerHTML = `
+    <textarea class="item-edit-input" rows="2">${currentText}</textarea>
+    <div class="edit-actions">
+      <button class="edit-save-btn">✓ ${lang === 'de' ? 'Speichern' : lang === 'cs' ? 'Uložit' : 'Save'}</button>
+      <button class="edit-cancel-btn">✗ ${lang === 'de' ? 'Abbrechen' : lang === 'cs' ? 'Zrušit' : 'Cancel'}</button>
+    </div>
+  `;
+
+  const textarea = contentEl.querySelector('.item-edit-input');
+  textarea.focus();
+  textarea.select();
+
+  // Auto-resize
+  textarea.oninput = () => {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+  };
+
+  // Keyboard shortcuts
+  textarea.onkeydown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); saveEdit(item, idx, textarea.value); }
+    if (e.key === 'Escape') { renderItems(); }
+  };
+
+  contentEl.querySelector('.edit-save-btn').onclick = (e) => {
+    e.stopPropagation();
+    saveEdit(item, idx, textarea.value.trim());
+  };
+  contentEl.querySelector('.edit-cancel-btn').onclick = (e) => {
+    e.stopPropagation();
+    renderItems();
+  };
+}
+
+function saveEdit(item, idx, newText) {
+  if (!newText) return;
+  if (idx >= 0) {
+    // existing item — store per-lang
+    if (!customLangTexts.has(idx)) {
+      customLangTexts.set(idx, { de: item.de, cs: item.cs, en: item.en });
+    }
+    const stored = customLangTexts.get(idx);
+    stored[lang] = newText;
+    customLangTexts.set(idx, stored);
+  } else {
+    // custom item — find in customItems
+    const ci = customItems.find(i => i === item);
+    if (ci) ci[lang] = newText;
+  }
+  renderItems();
+  triggerAutosave();
+}
+
+// ── Add new item ─────────────────────────────────────────────────────────────
+function startAddingItem() {
+  const list = document.getElementById('item-list');
+  const addBtn = list.querySelector('.add-item-btn');
+
+  const el = document.createElement('div');
+  el.className = 'check-item editing';
+  el.innerHTML = `
+    <div class="checkbox"></div>
+    <div class="item-content">
+      <textarea class="item-edit-input" rows="2" placeholder="${lang === 'de' ? 'Neuer Eintrag…' : lang === 'cs' ? 'Nová položka…' : 'New item…'}"></textarea>
+      <div class="edit-actions">
+        <button class="edit-save-btn">＋ ${lang === 'de' ? 'Hinzufügen' : lang === 'cs' ? 'Přidat' : 'Add'}</button>
+        <button class="edit-cancel-btn">✗</button>
+      </div>
+    </div>
+  `;
+  list.insertBefore(el, addBtn);
+
+  const textarea = el.querySelector('.item-edit-input');
+  textarea.focus();
+  textarea.oninput = () => {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+  };
+  textarea.onkeydown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addNewItem(textarea.value.trim()); }
+    if (e.key === 'Escape') { el.remove(); }
+  };
+  el.querySelector('.edit-save-btn').onclick = () => addNewItem(textarea.value.trim());
+  el.querySelector('.edit-cancel-btn').onclick = () => el.remove();
+}
+
+function addNewItem(text) {
+  if (!text) return;
+  const newItem = { de: text, cs: text, en: text, tags: [activeFilter !== 'all' ? activeFilter : 'custom'] };
+  customItems.push(newItem);
+  ITEMS_CLEAN.push(newItem);
+  renderItems();
+  triggerAutosave();
+}
+
+// ── Extend save/load for custom data ─────────────────────────────────────────
+const _origBuildSaveData = buildSaveData;
+function buildSaveData() {
+  return JSON.stringify({
+    version: VERSION,
+    savedAt: new Date().toISOString(),
+    lang: lang,
+    activeFilter: activeFilter,
+    checked: [...checked],
+    archived: [...archived],
+    customTexts: [...customLangTexts.entries()],
+    customItems: customItems,
+  }, null, 2);
+}
+
+const _origLoadSaveData = loadSaveData;
+function loadSaveData(data) {
+  const obj = JSON.parse(data);
+  if (obj.lang) lang = obj.lang;
+  if (obj.activeFilter) activeFilter = obj.activeFilter;
+  if (Array.isArray(obj.checked)) { checked.clear(); obj.checked.forEach(i => checked.add(i)); }
+  if (Array.isArray(obj.archived)) { archived.clear(); obj.archived.forEach(i => archived.add(i)); }
+  if (Array.isArray(obj.customTexts)) {
+    customLangTexts.clear();
+    obj.customTexts.forEach(([k, v]) => customLangTexts.set(k, v));
+  }
+  if (Array.isArray(obj.customItems)) {
+    customItems.length = 0;
+    obj.customItems.forEach(ci => { customItems.push(ci); ITEMS_CLEAN.push(ci); });
+  }
+  renderAll();
+  gdriveSetStatus('connected', 'Geladen: ' + new Date(obj.savedAt).toLocaleString());
+}
+
+// ===================== GOOGLE DRIVE =====================
+const CLIENT_ID = '835697841566-6fh1j37c0n7c8a8ua4bii77kn824ro7q.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+const FILE_NAME = 'reiseplanung_checklist.json';
+
+let gdriveToken = null;
+let gdriveFileId = null;
+let autosaveEnabled = true;
+let autosaveTimer = null;
+
+// ── Auth ──────────────────────────────────────────────────────────────────
+function gdriveInitClient() {
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: SCOPES,
+    callback: (resp) => {
+      if (resp.error) { gdriveSetStatus('error', 'Fehler beim Login'); return; }
+      gdriveToken = resp.access_token;
+      gdriveSetStatus('connected', 'Verbunden');
+      document.getElementById('gdrive-login-btn').classList.add('connected');
+      document.getElementById('gdrive-btn-label').textContent = '✓ Google Drive';
+      document.getElementById('gdrive-save-btn').style.display = 'inline-flex';
+      document.getElementById('gdrive-load-btn').style.display = 'inline-flex';
+      document.getElementById('gdrive-autosave-wrap').style.display = 'flex';
+      gdriveLoad(); // auto-load on connect
+    }
+  });
+  client.requestAccessToken();
+}
+
+function gdriveLogin() {
+  if (typeof google !== 'undefined' && google.accounts) {
+    gdriveInitClient();
+    return;
+  }
+  // Dynamically load the Google script, then init
+  gdriveSetStatus('saving', 'Wird geladen…');
+  const script = document.createElement('script');
+  script.src = 'https://accounts.google.com/gsi/client';
+  script.onload = () => { gdriveInitClient(); };
+  script.onerror = () => { gdriveSetStatus('error', 'Google Script konnte nicht geladen werden'); };
+  document.head.appendChild(script);
+}
+
+function gdriveSetStatus(state, text) {
+  const dot = document.getElementById('gdrive-dot');
+  const label = document.getElementById('gdrive-status-text');
+  dot.className = 'dot ' + (state === 'connected' ? 'green' : state === 'saving' ? 'yellow' : state === 'error' ? 'red' : '');
+  label.textContent = text;
+}
+
+// ── Build save data ───────────────────────────────────────────────────────
+function buildSaveData() {
+  return JSON.stringify({
+    version: VERSION,
+    savedAt: new Date().toISOString(),
+    lang: lang,
+    activeFilter: activeFilter,
+    checked: [...checked],
+  }, null, 2);
+}
+
+function loadSaveData(data) {
+  const obj = JSON.parse(data);
+  if (obj.lang) { lang = obj.lang; }
+  if (obj.activeFilter) { activeFilter = obj.activeFilter; }
+  if (Array.isArray(obj.checked)) {
+    checked.clear();
+    obj.checked.forEach(i => checked.add(i));
+  }
+  renderAll();
+  gdriveSetStatus('connected', 'Geladen: ' + new Date(obj.savedAt).toLocaleString());
+}
+
+// ── Find existing file ────────────────────────────────────────────────────
+async function gdriveFindFile() {
+  const resp = await fetch(
+    `https://www.googleapis.com/drive/v3/files?q=name='${FILE_NAME}' and trashed=false&fields=files(id,name,modifiedTime)`,
+    { headers: { Authorization: 'Bearer ' + gdriveToken } }
+  );
+  const data = await resp.json();
+  return data.files && data.files.length > 0 ? data.files[0] : null;
+}
+
+// ── Save ──────────────────────────────────────────────────────────────────
+async function gdriveSave() {
+  if (!gdriveToken) return;
+  const saveBtn = document.getElementById('gdrive-save-btn');
+  saveBtn.classList.add('saving');
+  gdriveSetStatus('saving', 'Wird gespeichert…');
+
+  try {
+    const content = buildSaveData();
+    const blob = new Blob([content], { type: 'application/json' });
+
+    if (!gdriveFileId) {
+      const existing = await gdriveFindFile();
+      if (existing) gdriveFileId = existing.id;
+    }
+
+    let resp;
+    if (gdriveFileId) {
+      // Update existing file
+      resp = await fetch(
+        `https://www.googleapis.com/upload/drive/v3/files/${gdriveFileId}?uploadType=media`,
+        { method: 'PATCH', headers: { Authorization: 'Bearer ' + gdriveToken, 'Content-Type': 'application/json' }, body: blob }
+      );
+    } else {
+      // Create new file
+      const meta = new Blob([JSON.stringify({ name: FILE_NAME, mimeType: 'application/json' })], { type: 'application/json' });
+      const form = new FormData();
+      form.append('metadata', meta);
+      form.append('file', blob);
+      resp = await fetch(
+        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
+        { method: 'POST', headers: { Authorization: 'Bearer ' + gdriveToken }, body: form }
+      );
+      const created = await resp.json();
+      gdriveFileId = created.id;
+    }
+
+    gdriveSetStatus('connected', 'Gespeichert: ' + new Date().toLocaleTimeString());
+  } catch(e) {
+    gdriveSetStatus('error', 'Speichern fehlgeschlagen');
+    console.error(e);
+  }
+  saveBtn.classList.remove('saving');
+}
+
+// ── Load ──────────────────────────────────────────────────────────────────
+async function gdriveLoad() {
+  if (!gdriveToken) return;
+  gdriveSetStatus('saving', 'Wird geladen…');
+  try {
+    const file = await gdriveFindFile();
+    if (!file) { gdriveSetStatus('connected', 'Keine gespeicherte Liste gefunden'); return; }
+    gdriveFileId = file.id;
+    const resp = await fetch(
+      `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`,
+      { headers: { Authorization: 'Bearer ' + gdriveToken } }
+    );
+    const text = await resp.text();
+    loadSaveData(text);
+  } catch(e) {
+    gdriveSetStatus('error', 'Laden fehlgeschlagen');
+    console.error(e);
+  }
+}
+
+// ── Auto-save ─────────────────────────────────────────────────────────────
+function scheduleAutosave() {
+  if (!autosaveEnabled || !gdriveToken) return;
+  clearTimeout(autosaveTimer);
+  autosaveTimer = setTimeout(() => gdriveSave(), 3000); // 3s debounce
+}
+
+function toggleAutosave(enabled) {
+  autosaveEnabled = enabled;
+  if (!enabled) clearTimeout(autosaveTimer);
+}
+
+// ── Hook into check toggling ──────────────────────────────────────────────
+function triggerAutosave() { scheduleAutosave(); }
+
+// ── Update toolbar labels on lang change ─────────────────────────────────
+function updateGdriveLabels() {
+  const labels = {
+    de: { connect: 'Google Drive verbinden', connected: '✓ Google Drive', save: 'Speichern', load: 'Laden', auto: 'Auto-Speichern', notConnected: 'Nicht verbunden' },
+    cs: { connect: 'Připojit Google Drive', connected: '✓ Google Drive', save: 'Uložit', load: 'Načíst', auto: 'Automatické ukládání', notConnected: 'Nepřipojeno' },
+    en: { connect: 'Connect Google Drive', connected: '✓ Google Drive', save: 'Save', load: 'Load', auto: 'Auto-save', notConnected: 'Not connected' },
+  };
+  const L = labels[lang] || labels.de;
+  const btnLabel = document.getElementById('gdrive-btn-label');
+  if (btnLabel) btnLabel.textContent = gdriveToken ? L.connected : L.connect;
+  const saveLabel = document.getElementById('gdrive-save-label');
+  if (saveLabel) saveLabel.textContent = L.save;
+  const loadLabel = document.getElementById('gdrive-load-label');
+  if (loadLabel) loadLabel.textContent = L.load;
+  const autoLabel = document.getElementById('gdrive-autosave-label');
+  if (autoLabel) autoLabel.textContent = L.auto;
+  if (!gdriveToken) {
+    const statusText = document.getElementById('gdrive-status-text');
+    if (statusText) statusText.textContent = L.notConnected;
+  }
 }
 
 function renderAll() {

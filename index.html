@@ -668,6 +668,19 @@
   }
   .archived-item .item-text { color: var(--text-muted) !important; font-style: italic; }
   .archived-item .archive-btn { opacity: 1 !important; color: var(--accent2); }
+  .delete-btn {
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: all 0.15s;
+    line-height: 1;
+    color: var(--text-light);
+    margin-top: 2px;
+  }
+  .delete-btn:hover { background: #fdecea; color: var(--accent); transform: scale(1.15); }
 
   /* ── INLINE EDIT ──────────────────────────────────────── */
   .check-item .item-text { cursor: text; }
@@ -964,7 +977,7 @@
 <script>
 // ===================== VERSION =====================
 // 🔧 Zum Updaten: Diese Zahl hochzählen, dann Datei auf GitHub hochladen
-const VERSION = '1.5.0';
+const VERSION = '1.5.1';
 const BUILD_DATE = '2026-03-29';
 
 // ===================== TRANSLATIONS =====================
@@ -1811,6 +1824,7 @@ function renderItems() {
       </div>
       <div class="item-actions">
         <button class="archive-btn" title="${isArchived ? (lang==='de'?'Wiederherstellen':lang==='cs'?'Obnovit':'Restore') : (lang==='de'?'Archivieren':lang==='cs'?'Archivovat':'Archive')}" onclick="toggleArchive(event, ${idx})">${isArchived ? '↩' : '🗄'}</button>
+        ${isArchived ? `<button class="delete-btn" title="${lang==='de'?'Endgültig löschen':lang==='cs'?'Trvale smazat':'Delete permanently'}" onclick="deleteItem(event, ${idx})">🗑</button>` : ''}
       </div>
     `;
 
@@ -1963,6 +1977,31 @@ function updateCheckedButton() {
 
 
 // ===================== ARCHIVE =====================
+
+function deleteItem(e, idx) {
+  e.stopPropagation();
+  const label = lang === 'de' ? 'Wirklich löschen?' : lang === 'cs' ? 'Opravdu smazat?' : 'Delete permanently?';
+  if (!confirm(label)) return;
+  ITEMS_CLEAN.splice(idx, 1);
+  archived.delete(idx);
+  checked.delete(idx);
+  customLangTexts.delete(idx);
+  // Re-index archived and checked (all indices > idx shift down by 1)
+  const reindex = (set) => {
+    const updated = new Set();
+    set.forEach(i => { if (i < idx) updated.add(i); else if (i > idx) updated.add(i - 1); });
+    set.clear(); updated.forEach(i => set.add(i));
+  };
+  reindex(archived);
+  reindex(checked);
+  // Re-index customLangTexts
+  const newMap = new Map();
+  customLangTexts.forEach((v, k) => { if (k < idx) newMap.set(k, v); else if (k > idx) newMap.set(k - 1, v); });
+  customLangTexts.clear(); newMap.forEach((v, k) => customLangTexts.set(k, v));
+  renderItems();
+  triggerAutosave();
+}
+
 function toggleArchive(e, idx) {
   e.stopPropagation();
   if (archived.has(idx)) {

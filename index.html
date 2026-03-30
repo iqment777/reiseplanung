@@ -1164,7 +1164,7 @@
 <script>
 // ===================== VERSION =====================
 // 🔧 Zum Updaten: Diese Zahl hochzählen, dann Datei auf GitHub hochladen
-const VERSION = '1.7.1';
+const VERSION = '1.8.0';
 const BUILD_DATE = '2026-03-29';
 
 // ===================== TRANSLATIONS =====================
@@ -2055,7 +2055,7 @@ function renderSidebar() {
   const reset = document.createElement('button');
   reset.className = 'reset-btn';
   reset.textContent = t('resetChecks');
-  reset.onclick = () => { checked.clear(); renderItems(); };
+  reset.onclick = () => { checked.clear(); archived.clear(); customLangTexts.clear(); customTags.clear(); customItems.length = 0; sharedChecked.clear(); sharedArchived.clear(); privateChecked.clear(); privateArchived.clear(); lsClear(); renderItems(); };
   sb.appendChild(reset);
 }
 
@@ -2501,6 +2501,86 @@ function loadSaveData(data) {
 }
 
 
+
+// ===================== LOCAL STORAGE (Offline-Speicher) =====================
+const LS_KEY = 'reiseplanung_state';
+
+function lsSave() {
+  try {
+    const data = {
+      version: VERSION,
+      savedAt: new Date().toISOString(),
+      lang: lang,
+      activeFilter: activeFilter,
+      checked: [...checked],
+      archived: [...archived],
+      customTexts: [...customLangTexts.entries()],
+      customTags: [...customTags.entries()],
+      customItems: customItems,
+      // profile
+      activeProfile: activeProfile,
+      sharedChecked: [...sharedChecked],
+      sharedArchived: [...sharedArchived],
+      privateChecked: [...privateChecked],
+      privateArchived: [...privateArchived],
+      privateCustomTexts: [...privateCustomTexts.entries()],
+      privateCustomItems: [...privateCustomItems],
+    };
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+  } catch(e) { console.warn('localStorage save failed:', e); }
+}
+
+function lsLoad() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return false;
+    const obj = JSON.parse(raw);
+
+    if (obj.lang) lang = obj.lang;
+    if (obj.activeFilter) activeFilter = obj.activeFilter;
+    if (Array.isArray(obj.checked)) { checked.clear(); obj.checked.forEach(i => checked.add(i)); }
+    if (Array.isArray(obj.archived)) { archived.clear(); obj.archived.forEach(i => archived.add(i)); }
+    if (Array.isArray(obj.customTexts)) {
+      customLangTexts.clear();
+      obj.customTexts.forEach(([k,v]) => customLangTexts.set(k,v));
+    }
+    if (Array.isArray(obj.customTags)) {
+      customTags.clear();
+      obj.customTags.forEach(([k,v]) => {
+        customTags.set(k,v);
+        if (ITEMS_CLEAN[k]) ITEMS_CLEAN[k].tags = v;
+      });
+    }
+    if (Array.isArray(obj.customItems)) {
+      customItems.length = 0;
+      obj.customItems.forEach(ci => { customItems.push(ci); ITEMS_CLEAN.push(ci); });
+    }
+    // profile state
+    if (obj.activeProfile) {
+      activeProfile = obj.activeProfile;
+      lang = PROFILES[activeProfile]?.defaultLang || lang;
+    }
+    if (Array.isArray(obj.sharedChecked)) { sharedChecked.clear(); obj.sharedChecked.forEach(i => sharedChecked.add(i)); }
+    if (Array.isArray(obj.sharedArchived)) { sharedArchived.clear(); obj.sharedArchived.forEach(i => sharedArchived.add(i)); }
+    if (Array.isArray(obj.privateChecked)) { privateChecked.clear(); obj.privateChecked.forEach(i => privateChecked.add(i)); }
+    if (Array.isArray(obj.privateArchived)) { privateArchived.clear(); obj.privateArchived.forEach(i => privateArchived.add(i)); }
+    if (Array.isArray(obj.privateCustomTexts)) {
+      privateCustomTexts.clear();
+      obj.privateCustomTexts.forEach(([k,v]) => privateCustomTexts.set(k,v));
+    }
+    if (Array.isArray(obj.privateCustomItems)) {
+      privateCustomItems.length = 0;
+      obj.privateCustomItems.forEach(ci => { privateCustomItems.push(ci); ITEMS_CLEAN.push(ci); });
+    }
+    if (activeProfile) mergeProfileState();
+    return true;
+  } catch(e) { console.warn('localStorage load failed:', e); return false; }
+}
+
+function lsClear() {
+  try { localStorage.removeItem(LS_KEY); } catch(e) {}
+}
+
 // ===================== PROFILE SYSTEM =====================
 function showProfilePicker() {
   document.getElementById('profile-overlay').classList.add('open');
@@ -2524,6 +2604,7 @@ function selectProfile(profileKey) {
   mergeProfileState();
   renderAll();
 
+  lsSave();
   // Auto-load from Drive if connected
   if (gdriveToken) gdriveLoadProfile();
 }
@@ -2612,7 +2693,8 @@ async function gdriveLoadProfile() {
     }
     mergeProfileState();
     renderAll();
-    gdriveSetStatus('connected', 'Geladen');
+    lsSave();
+  gdriveSetStatus('connected', 'Geladen');
   } catch(e) {
     gdriveSetStatus('error', 'Laden fehlgeschlagen');
     console.error(e);
@@ -2821,7 +2903,7 @@ function toggleAutosave(enabled) {
 }
 
 // ── Hook into check toggling ──────────────────────────────────────────────
-function triggerAutosave() { scheduleAutosave(); }
+function triggerAutosave() { scheduleAutosave(); lsSave(); }
 
 // ── Update toolbar labels on lang change ─────────────────────────────────
 function updateGdriveLabels() {
@@ -2853,15 +2935,33 @@ function renderAll() {
 
 function setLang(l) {
   lang = l;
+  lsSave();
   renderAll();
 }
 
 // Init
-renderAll();
-// Set base item count (for shared vs private distinction)
 ITEMS_BASE_COUNT = ITEMS_CLEAN.length;
-// Show profile picker on load
-setTimeout(() => showProfilePicker(), 400);
+const hadLocalState = lsLoad();
+renderAll();
+
+if (hadLocalState && activeProfile) {
+  // Profile was restored from localStorage — update header indicator
+  const p = PROFILES[activeProfile];
+  if (p) {
+    const ind = document.getElementById('profile-indicator');
+    if (ind) {
+      ind.style.display = 'flex';
+      document.getElementById('pi-avatar').textContent = p.avatar;
+      document.getElementById('pi-avatar').style.background = p.color;
+      document.getElementById('pi-name').textContent = p.name;
+    }
+  }
+  // Still offer Drive sync if already connected
+  if (gdriveToken) gdriveLoadProfile();
+} else {
+  // No saved state — show profile picker
+  setTimeout(() => showProfilePicker(), 400);
+}
 </script>
 </body>
 </html>

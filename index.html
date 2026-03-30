@@ -1164,7 +1164,7 @@
 <script>
 // ===================== VERSION =====================
 // 🔧 Zum Updaten: Diese Zahl hochzählen, dann Datei auf GitHub hochladen
-const VERSION = '1.7.0';
+const VERSION = '1.7.1';
 const BUILD_DATE = '2026-03-29';
 
 // ===================== TRANSLATIONS =====================
@@ -1876,6 +1876,8 @@ const customLangTexts = new Map(); // idx -> { de, cs, en }
 const customItems = [];  // { de, cs, en, tags: [] }
 // Archive: set of ITEMS_CLEAN indices
 const archived = new Set();
+// Tag overrides: idx -> string[] of tags
+const customTags = new Map();
 // ── PROFILE SYSTEM ────────────────────────────────────────────────────────
 const PROFILES = {
   peta:     { name: 'Péťa',     avatar: 'P', color: '#2980b9', file: 'reiseplanung_peta.json',     defaultLang: 'cs' },
@@ -2324,11 +2326,9 @@ function startEditing(el, item, idx) {
   const contentEl = el.querySelector('.item-content');
   const currentText = itemText(item);
 
-  // Get current tags for this item
-  const currentTags = idx >= 0
-    ? (customLangTexts.has(idx) && customLangTexts.get(idx).__tags
-        ? [...customLangTexts.get(idx).__tags]
-        : [...(item.tags || [])])
+  // Get current tags — prefer customTags override, then live item.tags
+  const currentTags = idx >= 0 && customTags.has(idx)
+    ? [...customTags.get(idx)]
     : [...(item.tags || [])];
   let editTags = [...currentTags];
 
@@ -2402,14 +2402,20 @@ function startEditing(el, item, idx) {
 function saveEdit(item, idx, newText, newTags) {
   if (!newText) return;
   if (idx >= 0) {
+    // Save text
     if (!customLangTexts.has(idx)) {
       customLangTexts.set(idx, { de: item.de, cs: item.cs, en: item.en });
     }
     const stored = customLangTexts.get(idx);
     stored[lang] = newText;
-    if (newTags) { stored.__tags = newTags; item.tags = newTags; }
     customLangTexts.set(idx, stored);
+    // Save tags
+    if (newTags) {
+      customTags.set(idx, newTags);
+      ITEMS_CLEAN[idx].tags = newTags; // mutate live item
+    }
   } else {
+    // custom item
     const ci = customItems.find(i => i === item);
     if (ci) { ci[lang] = newText; if (newTags) ci.tags = newTags; }
   }
@@ -2470,6 +2476,7 @@ function buildSaveData() {
     checked: [...checked],
     archived: [...archived],
     customTexts: [...customLangTexts.entries()],
+    customTags: [...customTags.entries()],
     customItems: customItems,
   }, null, 2);
 }

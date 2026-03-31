@@ -1164,7 +1164,7 @@
 <script>
 // ===================== VERSION =====================
 // 🔧 Zum Updaten: Diese Zahl hochzählen, dann Datei auf GitHub hochladen
-const VERSION = '1.8.0';
+const VERSION = '1.8.1';
 const BUILD_DATE = '2026-03-29';
 
 // ===================== TRANSLATIONS =====================
@@ -2460,7 +2460,8 @@ function addNewItem(text) {
   if (!text) return;
   const newItem = { de: text, cs: text, en: text, tags: [activeFilter !== 'all' ? activeFilter : 'custom'] };
   customItems.push(newItem);
-  ITEMS_CLEAN.push(newItem);
+  // Only push to ITEMS_CLEAN if not already there (guard against double-add)
+  if (!ITEMS_CLEAN.includes(newItem)) ITEMS_CLEAN.push(newItem);
   renderItems();
   triggerAutosave();
 }
@@ -2493,6 +2494,7 @@ function loadSaveData(data) {
     obj.customTexts.forEach(([k, v]) => customLangTexts.set(k, v));
   }
   if (Array.isArray(obj.customItems)) {
+    ITEMS_CLEAN.length = ITEMS_BASE_COUNT;
     customItems.length = 0;
     obj.customItems.forEach(ci => { customItems.push(ci); ITEMS_CLEAN.push(ci); });
   }
@@ -2688,6 +2690,7 @@ async function gdriveLoadProfile() {
       privateChecked.clear(); (obj.checked||[]).forEach(i => privateChecked.add(i));
       privateArchived.clear(); (obj.archived||[]).forEach(i => privateArchived.add(i));
       privateCustomTexts.clear(); (obj.customTexts||[]).forEach(([k,v]) => privateCustomTexts.set(k,v));
+      ITEMS_CLEAN.length = ITEMS_BASE_COUNT + customItems.length; // keep shared custom items
       privateCustomItems.length = 0;
       (obj.customItems||[]).forEach(ci => { privateCustomItems.push(ci); ITEMS_CLEAN.push(ci); });
     }
